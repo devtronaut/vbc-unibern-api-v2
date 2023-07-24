@@ -1,0 +1,25 @@
+{
+  "name": "VBC Uni Bern API",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
+  "postStartCommand": "aws configure set region $AWS_DEFAULT_REGION --profile $AWS_DEFAULT_PROFILE && aws configure set output json --profile $AWS_DEFAULT_PROFILE && aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile $AWS_DEFAULT_PROFILE && aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile $AWS_DEFAULT_PROFILE",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hediet.vscode-drawio",
+        "ms-azuretools.vscode-docker",
+        "hashicorp.terraform",
+        "esbenp.prettier-vscode",
+        "christian-kohler.path-intellisense",
+        "aaron-bond.better-comments",
+        "yzhang.markdown-all-in-one",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  }
+}
