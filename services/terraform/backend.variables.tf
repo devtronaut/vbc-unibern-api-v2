@@ -5,16 +5,16 @@
 */
 
 variable "tfstate_bucket_name" {
-  default     = ""
   description = "The name of the S3 bucket to store the tfstate."
+  type        = string
 }
 
 variable "tfstate_locktable_name" {
-  default     = ""
   description = "The name of the DynamoDB table that holds the state lock."
+  type        = string
 }
 
 variable "tfstate_locktable_hashkey" {
-  default     = ""
   description = "The hashkey for the state lock table in DynamoDB."
+  type        = string
 }
