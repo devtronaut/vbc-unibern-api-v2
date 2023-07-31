@@ -2,6 +2,8 @@ all: tf-init-reconfigure tf-plan tf-apply tf-destroy help
 .PHONY: all
 .SILENT: all
 
+.DEFAULT_GOAL := help
+
 tf-init-reconfigure: # Initialize the working directory with the desired backend
 	terraform -chdir=terraform init -backend-config=./backend/backend.hcl -reconfigure
 
@@ -11,7 +13,7 @@ tf-plan: # Create an execution plan with the changes specified in the terraform 
 		-var-file=./variables/services.tfvars
 
 tf-apply: # Apply the changes specified in the terraform scripts
-	terraform -chdir=terraform apply \
+	terraform -chdir=terraform apply -lock=false \
 		-var-file=./variables/backend.tfvars \
 		-var-file=./variables/services.tfvars
 
