@@ -1,5 +1,4 @@
 resource "aws_apigatewayv2_integration" "gw_integration" {
-  # api_id = aws_apigatewayv2_api.lambda.id
   api_id = var.gw_api_id
 
   integration_uri    = var.lambda_invoke_arn
@@ -8,7 +7,6 @@ resource "aws_apigatewayv2_integration" "gw_integration" {
 }
 
 resource "aws_apigatewayv2_route" "gw_route" {
-  # api_id = aws_apigatewayv2_api.lambda.id
   api_id = var.gw_api_id
 
   route_key = "${var.http_method} /${var.function_name}"
