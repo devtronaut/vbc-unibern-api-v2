@@ -12,10 +12,11 @@ terraform {
 
   required_version = "1.5.2"
 
-  backend "s3" {
-    # check the backend folder for other parameters
-    key = "vbcunibernapi/states/terraform.tfstate"
-  }
+  # backend "s3" {
+  #   # check the backend folder for other parameters
+  #   key = "vbcunibernapi/states/terraform.tfstate"
+  # }
+  backend "local" {}
 }
 
 provider "aws" {
