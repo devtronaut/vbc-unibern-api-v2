@@ -23,3 +23,11 @@ variable "handler_function" {
   description = "Name of the handler function when the lambda is called. Must be x.handler."
   type        = string
 }
+
+variable "lambda_environment" {
+  description = "Environment variables for the lambda."
+
+  type = object({
+    SWISSVOLLEY_API_KEY = optional(string)
+  })
+}

@@ -26,6 +26,10 @@ resource "aws_lambda_function" "microservice_lambda" {
   source_code_hash = data.archive_file.microservice_lambda.output_base64sha256
 
   role = aws_iam_role.microservice_lambda.arn
+
+  environment {
+    variables = var.lambda_environment
+  }
 }
 
 resource "aws_cloudwatch_log_group" "microservice_lambda" {
@@ -54,4 +58,21 @@ resource "aws_iam_role" "microservice_lambda" {
 resource "aws_iam_role_policy_attachment" "microservice_lambda" {
   role       = aws_iam_role.microservice_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
+  name = "dynamodb_lambda_policy"
+
+  role = aws_iam_role.microservice_lambda.id
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : ["dynamodb:*"],
+        "Resource" : "${aws_dynamodb_table.microservice_table.arn}"
+      }
+    ]
+  })
 }

@@ -25,6 +25,17 @@ tf-destroy: # Destroy resources created with the terraform scripts
 		-var-file=./variables/backend.tfvars \
 		-var-file=./variables/services.tfvars		
 
+tf-deploy-service: check-service-name # Deploy service specified by a SERVICE env variable
+	@cd ./services/${SERVICE} && npm run compile
+	@make tf-apply
+
+check-service-name:
+ifndef SERVICE
+	$(error SERVICE is not set)
+else
+	$(info SERVICE is set to ${SERVICE})
+endif
+
 help: # Print help on Makefile
 	@grep '^[^.#]\+:\s\+.*#' Makefile | \
 	sed "s/\(.\+\):\s*\(.*\) #\s*\(.*\)/`printf "\033[93m"`\1`printf "\033[0m"`     \3 [\2]/" | \
