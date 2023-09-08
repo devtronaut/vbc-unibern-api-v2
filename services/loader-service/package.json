@@ -1,0 +1,22 @@
+{
+  "name": "loader-service",
+  "version": "1.0.0",
+  "description": "Service loads the required data from the Swissvolley API into an AWS DynamoDB",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./dist && tsc src/*.ts --outDir ./dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "esbuild": "^0.19.2",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.408.0",
+    "@types/aws-lambda": "^8.10.119"
+  }
+}

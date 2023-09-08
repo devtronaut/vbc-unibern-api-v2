@@ -2,11 +2,11 @@ import { Handler, APIGatewayEvent } from 'aws-lambda';
 
 export const handler: Handler = async (event: APIGatewayEvent) => {
   console.log('Event: ', event);
-  let responseMessage: String = 'Hello, World!';
+  let responseMessage: String = 'Hello, World! From ' + process.env.AWS_REGION;
 
   if (event.queryStringParameters && event.queryStringParameters['name']) {
-    let qsp: String = event.queryStringParameters['name'];
-    responseMessage = `Hello, ${qsp}`;
+    let qsp: string = event.queryStringParameters['name'];
+    responseMessage = `Hello, ${qsp}!`;
   }
 
   let responseHeader = {
