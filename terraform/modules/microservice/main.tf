@@ -1,7 +1,7 @@
 data "archive_file" "microservice_lambda" {
   type = "zip"
 
-  source_dir  = "${path.root}/../src/${var.source_dir}"
+  source_dir  = "${path.root}/../services/${var.source_dir}/dist"
   output_path = "${path.root}/../dist/${var.source_dir}.zip"
 }
 
