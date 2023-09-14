@@ -4,7 +4,10 @@
   "description": "Service loads the required data from the Swissvolley API into an AWS DynamoDB",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./dist && tsc src/*.ts --outDir ./dist"
+    "build": "rimraf ./dist && tsc src/*.ts --outDir ./dist",
+    "postbuild": "cp -r src/mockData dist", 
+    "start:test": "npm run build && npm run postbuild && node ./dist/test.js",
+    "start:dev": "npx ts-node ./src/test.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +20,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.408.0",
-    "@types/aws-lambda": "^8.10.119"
+    "@types/aws-lambda": "^8.10.119",
+    "dotenv": "^16.3.1"
   }
 }
