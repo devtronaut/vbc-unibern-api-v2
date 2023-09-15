@@ -29,6 +29,9 @@ tf-deploy-service: check-service-name # Deploy service specified by a SERVICE en
 	@cd ./services/${SERVICE} && npm run compile
 	@make tf-apply
 
+build-service: check-service-name # Build service specified by a SERVICE env variable
+	@cd ./services/${SERVICE} && npm run build
+
 check-service-name:
 ifndef SERVICE
 	$(error SERVICE is not set)
