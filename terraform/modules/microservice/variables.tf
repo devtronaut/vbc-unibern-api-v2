@@ -13,7 +13,7 @@ variable "function_name" {
   type        = string
 }
 
-variable "node_version" {
+variable "nodejs_version" {
   description = "Node version used to run the lambda function. Find supported runtimes: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
   type        = string
   default     = "nodejs18.x"
