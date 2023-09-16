@@ -9,7 +9,6 @@ export async function main(){
   // Fetch games (w/o cup), extract and persist teams data
   console.log('Starting to persist teams.');
   const gamesNoCup = await fetchGames(false);
-  console.log('Games fetched.');
   if(!gamesNoCup) return console.error('Error when fetching games for teams data (w/o cup).');
   const teamsData = extractTeamsData(gamesNoCup);
   const persistTeamsResult = await persistTeams(teamsData);
