@@ -4,11 +4,12 @@
 module "games-service" {
   source = "./modules/microservice"
 
-  services_bucket  = aws_s3_bucket.services_bucket.id
-  source_dir       = "games-service"
-  function_name    = "games-service"
-  nodejs_version   = var.nodejs_version
-  handler_function = "index.handler"
+  services_bucket        = aws_s3_bucket.services_bucket.id
+  source_dir             = "games-service"
+  function_name          = "games-service"
+  nodejs_version         = var.nodejs_version
+  handler_function       = "index.handler"
+  microservice_table_arn = aws_dynamodb_table.upcoming_games_table.arn
 
   lambda_environment = {}
 }
@@ -30,11 +31,12 @@ module "games-gw-integration" {
 module "rankings-service" {
   source = "./modules/microservice"
 
-  services_bucket  = aws_s3_bucket.services_bucket.id
-  source_dir       = "rankings-service"
-  function_name    = "rankings-service"
-  nodejs_version   = var.nodejs_version
-  handler_function = "index.handler"
+  services_bucket        = aws_s3_bucket.services_bucket.id
+  source_dir             = "rankings-service"
+  function_name          = "rankings-service"
+  nodejs_version         = var.nodejs_version
+  handler_function       = "index.handler"
+  microservice_table_arn = aws_dynamodb_table.rankings_table.arn
 
   lambda_environment = {}
 }
@@ -56,11 +58,12 @@ module "rankings-gw-integration" {
 module "results-service" {
   source = "./modules/microservice"
 
-  services_bucket  = aws_s3_bucket.services_bucket.id
-  source_dir       = "results-service"
-  function_name    = "results-service"
-  nodejs_version   = var.nodejs_version
-  handler_function = "index.handler"
+  services_bucket        = aws_s3_bucket.services_bucket.id
+  source_dir             = "results-service"
+  function_name          = "results-service"
+  nodejs_version         = var.nodejs_version
+  handler_function       = "index.handler"
+  microservice_table_arn = aws_dynamodb_table.results_table.arn
 
   lambda_environment = {}
 }

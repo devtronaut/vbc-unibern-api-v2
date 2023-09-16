@@ -31,3 +31,9 @@ variable "lambda_environment" {
     SWISSVOLLEY_API_KEY = optional(string)
   })
 }
+
+variable "microservice_table_arn" {
+  description = "ARN of the table the microservice need access to."
+
+  type = string
+}

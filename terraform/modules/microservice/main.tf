@@ -70,8 +70,11 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
     "Statement" : [
       {
         "Effect" : "Allow",
-        "Action" : ["dynamodb:*"],
-        "Resource" : "${aws_dynamodb_table.microservice_table.arn}"
+        "Action" : [
+          "dynamodb:GetItem",
+          "dynamodb:BatchGetItem"
+        ],
+        "Resource" : "${var.microservice_table_arn}"
       }
     ]
   })
