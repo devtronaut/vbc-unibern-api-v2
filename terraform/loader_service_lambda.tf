@@ -20,6 +20,7 @@ resource "aws_lambda_function" "loader_lambda" {
   s3_bucket = aws_s3_bucket.services_bucket.id
   s3_key    = aws_s3_object.loader_lambda.key
 
+  timeout = 60
   runtime = var.nodejs_version
   handler = "index.handler"
 
@@ -73,36 +74,29 @@ resource "aws_iam_role_policy" "loader_dynamodb_policy" {
       {
         "Effect" : "Allow",
         "Action" : [
-          "dynamodb:CreateTable",
-          "dynamodb:BatchGetItem",
-          "dymamodb:DeleteItem"
+          "dynamodb:BatchWriteItem",
+          "dynamodb:GetItem"
         ],
         "Resource" : "${aws_dynamodb_table.teams_table.arn}"
       },
       {
         "Effect" : "Allow",
         "Action" : [
-          "dynamodb:CreateTable",
-          "dynamodb:DeleteTable",
-          "dymamodb:DeleteItem"
+          "dynamodb:BatchWriteItem"
         ],
         "Resource" : "${aws_dynamodb_table.rankings_table.arn}"
       },
       {
         "Effect" : "Allow",
         "Action" : [
-          "dynamodb:CreateTable",
-          "dynamodb:DeleteTable",
-          "dymamodb:DeleteItem"
+          "dynamodb:BatchWriteItem"
         ],
         "Resource" : "${aws_dynamodb_table.results_table.arn}"
       },
       {
         "Effect" : "Allow",
         "Action" : [
-          "dynamodb:CreateTable",
-          "dynamodb:DeleteTable",
-          "dymamodb:DeleteItem"
+          "dynamodb:BatchWriteItem"
         ],
         "Resource" : "${aws_dynamodb_table.upcoming_games_table.arn}"
       }
