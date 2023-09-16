@@ -26,7 +26,7 @@ tf-destroy: # Destroy resources created with the terraform scripts
 		-var-file=./variables/services.tfvars		
 
 tf-deploy-service: check-service-name # Deploy service specified by a SERVICE env variable
-	@cd ./services/${SERVICE} && npm run compile
+	@cd ./services/${SERVICE} && npm run build
 	@make tf-apply
 
 build-service: check-service-name # Build service specified by a SERVICE env variable
