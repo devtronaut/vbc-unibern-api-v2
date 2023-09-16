@@ -20,9 +20,10 @@ resource "aws_lambda_function" "loader_lambda" {
   s3_bucket = aws_s3_bucket.services_bucket.id
   s3_key    = aws_s3_object.loader_lambda.key
 
-  timeout = 60
-  runtime = var.nodejs_version
-  handler = "index.handler"
+  timeout     = 60
+  memory_size = 256
+  runtime     = var.nodejs_version
+  handler     = "index.handler"
 
   source_code_hash = data.archive_file.loader_lambda.output_base64sha256
 
