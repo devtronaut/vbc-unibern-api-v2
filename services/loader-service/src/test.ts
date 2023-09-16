@@ -18,10 +18,14 @@ test().then(() => console.log('\nDone!'))
 async function test(): Promise<void>{
   try {
     const gamesNoCup = config.STAGE === Stage.DEV ? readJSON('./mockData/gamesNoCup-mock.json') as Game[] : await fetchGames(false);
+    if (!gamesNoCup) return console.error('Error when fetching games for teams data (w/o cup).');
     const teamsData = extractTeamsData(gamesNoCup);
+
+    console.log(JSON.stringify(teamsData, null, 2));
     
+    // Don't use the fetchGamesSeparated function here, since it doesn't support the mock data json.
     const games = config.STAGE === Stage.DEV ? readJSON('./mockData/games-mock.json') as Game[] : await fetchGames(true);
-    const rankings = config.STAGE === Stage.DEV ? readJSON('./mockData/rankings-mock.json') as Ranking[] : await fetchRankings();
+    if (!games) return console.error('Error when fetching games for upcoming games and results (w/ cup).');
 
     const upcomingGamesRaw: Game[] = [];
     const resultsRaw: Game[] = [];
@@ -32,11 +36,15 @@ async function test(): Promise<void>{
       } else {
         resultsRaw.push(game);
       }
-    })
+    });
 
     const upcomingGamesData = extractUpcomingGamesData(upcomingGamesRaw, teamsData);
     const resultsData = extractResultsData(resultsRaw, teamsData);
+
+    const rankings = config.STAGE === Stage.DEV ? readJSON('./mockData/rankings-mock.json') as Ranking[] : await fetchRankings();
+    if (!rankings) return console.error('Error when fetching rankings.');
     const teamRankingsData = extractRankingsData(rankings, teamsData);
+
   } catch (e) {
     console.error(e);
   }
