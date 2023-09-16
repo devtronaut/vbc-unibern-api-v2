@@ -2,7 +2,9 @@ import { Handler, APIGatewayEvent } from 'aws-lambda';
 import { main } from './controller/controller';
 
 export const handler: Handler = async (event: APIGatewayEvent) => {
-  await main().then(() => {
+  try{
+    await main();
+  
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -10,7 +12,7 @@ export const handler: Handler = async (event: APIGatewayEvent) => {
         message: JSON.stringify('Teams, Results, Upcoming Games and rankings loaded successfully!'),
       }),
     };
-  }).catch(err => {
+  } catch(err) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
@@ -18,5 +20,5 @@ export const handler: Handler = async (event: APIGatewayEvent) => {
         message: JSON.stringify(`Loader could not perform all actions: \n${err}`),
       }),
     };
-  });
+  }
 }

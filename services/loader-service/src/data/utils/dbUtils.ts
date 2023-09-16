@@ -7,8 +7,8 @@ export async function batchWrite<T>(data: T[], tableName: string){
     const batches: any[] = [];
     let putRequestsInBatch: number = 0;
   
-
-    data.forEach(item => {
+    console.log(`About to persist ${data.length} items.`);
+    data.forEach((item, idx) => {
       const putRequest = { PutRequest: { Item: item }}
       putRequests.push(putRequest);
 
@@ -17,22 +17,27 @@ export async function batchWrite<T>(data: T[], tableName: string){
         batches.push(putRequests.splice(0, putRequests.length));
         putRequestsInBatch = 0;
       }
+
+      if(idx === data.length - 1 && putRequestsInBatch > 0){
+        batches.push(putRequests);
+        putRequestsInBatch = 0;
+      }
     })
 
-    batches.forEach(async batch => {
+    for(const batch of batches){
+      console.log(`Persisting batch of ${batch.length} items.`);
       const params = {
         RequestItems: {
-          [tableName]: batch
-        }
+          [tableName]: batch,
+        },
+        ReturnConsumedCapacity: 'TOTAL'
       };
 
       const response = await ddbDocClient.send(new BatchWriteCommand(params));
-      console.log(response);
-    })
-
-    return;
+      console.log('Batch saved. Status: ' + response.$metadata.httpStatusCode);
+    }
   } catch(err){
-    console.error(err);
+    console.log(err);
     throw err;
   }
 }
