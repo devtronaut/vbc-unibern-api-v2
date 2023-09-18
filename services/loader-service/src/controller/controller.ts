@@ -1,3 +1,4 @@
+import { cleanupTeams } from '../data/cleanup';
 import { persistRankings, persistResults, persistTeams, persistUpcomingGames } from '../data/persist';
 import { extractRankingsData } from '../extract/extractRankingsData';
 import { extractResultsData } from '../extract/extractResultsData';
@@ -53,5 +54,12 @@ export async function main(){
   const persistRankingsResult = await persistRankings(rankingsData);
   if (!persistRankingsResult) throw new Error('Unable to persist rankings.');
   console.log(`Successfully persisted ${rankingsData.length} rankings.`);
+  console.log(`=================================================`);
+
+  console.log('Cleaning up teams table.');
+  const now = new Date().toISOString();
+  const cleanupSuccess = await cleanupTeams(now);
+  if (!cleanupSuccess) throw new Error('Unable to cleanup teams.')
+  console.log(`Successfully cleaned up teams before ${now}.`);
   console.log(`=================================================`);
 }

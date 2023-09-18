@@ -1,6 +1,5 @@
-import { PutRequest, WriteRequest } from '@aws-sdk/client-dynamodb';
 import { ddbDocClient } from './dbClient';
-import { BatchWriteCommand, BatchWriteCommandInput, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { BatchWriteCommand, BatchWriteCommandInput, DeleteCommand, DeleteCommandInput, GetCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 
 export async function batchWrite<T>(data: T[], tableName: string){
   try{
@@ -38,7 +37,26 @@ export async function batchWrite<T>(data: T[], tableName: string){
       console.log('Batch saved. Status: ' + response.$metadata.httpStatusCode);
     }
   } catch(err){
-    console.log(err);
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function deleteBeforeDate(dateIsoString: string, tableName: string){
+  try{
+    const params: DeleteCommandInput = {
+      TableName: tableName,
+      ConditionExpression: "createdAt < :date",
+      ExpressionAttributeValues: {
+        ":date": dateIsoString,
+      },
+      Key: {}
+    }
+
+    const response = await ddbDocClient.send(new DeleteCommand(params));
+    console.log(response);
+  } catch(err){
+    console.error(err);
     throw err;
   }
 }
