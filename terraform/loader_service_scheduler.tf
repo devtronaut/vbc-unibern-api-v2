@@ -44,6 +44,5 @@ resource "aws_scheduler_schedule" "invoke_lambda_schedule" {
   target {
     arn      = aws_lambda_function.loader_lambda.arn
     role_arn = aws_iam_role.scheduler_role.arn
-    input    = jsonencode({ "input" : "Scheduled execution." })
   }
 }
