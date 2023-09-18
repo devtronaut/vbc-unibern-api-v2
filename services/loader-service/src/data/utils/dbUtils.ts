@@ -4,25 +4,14 @@ import { BatchWriteCommand, BatchWriteCommandInput, DeleteCommand, DeleteCommand
 export async function batchWrite<T>(data: T[], tableName: string){
   try{
     const putRequests: any[] = [];
-    const batches: any[] = [];
-    let putRequestsInBatch: number = 0;
   
     console.log(`About to persist ${data.length} items.`);
-    data.forEach((item, idx) => {
+    data.forEach(item => {
       const putRequest = { PutRequest: { Item: item }}
       putRequests.push(putRequest);
-
-      putRequestsInBatch += 1;
-      if (putRequestsInBatch === 25){
-        batches.push(putRequests.splice(0, putRequests.length));
-        putRequestsInBatch = 0;
-      }
-
-      if(idx === data.length - 1 && putRequestsInBatch > 0){
-        batches.push(putRequests);
-        putRequestsInBatch = 0;
-      }
     })
+
+    const batches = sliceArrayIntoGroups(putRequests, 25);
 
     for(const batch of batches){
       console.log(`Persisting batch of ${batch.length} items.`);
@@ -36,25 +25,6 @@ export async function batchWrite<T>(data: T[], tableName: string){
       const response = await ddbDocClient.send(new BatchWriteCommand(params));
       console.log('Batch saved. Status: ' + response.$metadata.httpStatusCode);
     }
-  } catch(err){
-    console.error(err);
-    throw err;
-  }
-}
-
-export async function deleteBeforeDate(dateIsoString: string, tableName: string){
-  try{
-    const params: DeleteCommandInput = {
-      TableName: tableName,
-      ConditionExpression: "createdAt < :date",
-      ExpressionAttributeValues: {
-        ":date": dateIsoString,
-      },
-      Key: {}
-    }
-
-    const response = await ddbDocClient.send(new DeleteCommand(params));
-    console.log(response);
   } catch(err){
     console.error(err);
     throw err;
@@ -75,4 +45,14 @@ export async function getTeamById(id: number){
   } catch(err){
     throw err;
   }
+}
+
+function sliceArrayIntoGroups<T>(array: T[], maxPerGroup: number): T[][]{
+  const groups: T[][] = [];
+
+  for(let index = 0; index < array.length; index += maxPerGroup){
+    groups.push(array.slice(index, index + maxPerGroup));
+  }
+
+  return groups;
 }
