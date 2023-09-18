@@ -28,7 +28,8 @@ export type RankingSchema = {
   id: string,
   teamId: number,
   leagueCaption: string,
-  teams: TeamRankingSchema[]
+  teams: TeamRankingSchema[],
+  createdAt: string
 }
 
 export function extractRankingsData(rankings: Ranking[], teamsData: TeamSchema[]): RankingSchema[]{
@@ -86,7 +87,8 @@ function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema{
     id: team.id,
     teamId: team.teamId,
     leagueCaption: team.league.caption,
-    teams: teams.sort((t1, t2) => t1.rank - t2.rank)
+    teams: teams.sort((t1, t2) => t1.rank - t2.rank),
+    createdAt: new Date().toISOString(),
   }
 
   return rankingData;

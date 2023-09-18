@@ -1,5 +1,6 @@
+import { PutRequest, WriteRequest } from '@aws-sdk/client-dynamodb';
 import { ddbDocClient } from './dbClient';
-import { BatchWriteCommand, GetCommand } from '@aws-sdk/lib-dynamodb';
+import { BatchWriteCommand, BatchWriteCommandInput, GetCommand } from '@aws-sdk/lib-dynamodb';
 
 export async function batchWrite<T>(data: T[], tableName: string){
   try{
@@ -26,7 +27,7 @@ export async function batchWrite<T>(data: T[], tableName: string){
 
     for(const batch of batches){
       console.log(`Persisting batch of ${batch.length} items.`);
-      const params = {
+      const params: BatchWriteCommandInput = {
         RequestItems: {
           [tableName]: batch,
         },

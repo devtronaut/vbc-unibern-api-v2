@@ -24,6 +24,7 @@ export type TeamSchema = {
   league: LeagueSchema,
   group: GroupSchema,
   club: ClubSchema,
+  createdAt: string
 }
 
 export function extractTeamsData(games: Game[]): TeamSchema[]{
@@ -71,5 +72,6 @@ function getTeamData(game: Game, team: Team): TeamSchema{
       clubId: parseInt(team.clubId),
       caption: team.clubCaption,
     },
+    createdAt: new Date().toISOString(),
   }
 }

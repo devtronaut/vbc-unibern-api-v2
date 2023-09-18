@@ -23,7 +23,8 @@ export type UpcomingGamesSchema = {
   league: string,
   opponent: string,
   type: GameType,
-  location: LocationSchema
+  location: LocationSchema,
+  createdAt: string
 }
 
 export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: TeamSchema[]): UpcomingGamesSchema[] {
@@ -73,7 +74,8 @@ export function getUpcomingGamesData(game: Game, ownTeams: Map<number, TeamSchem
     ...teamInfo,
     gameId: game.gameId,
     dateUtc: game.playDateUtc,
-    location
+    location,
+    createdAt: new Date().toISOString()
   };
 
   return upcomingGameData;

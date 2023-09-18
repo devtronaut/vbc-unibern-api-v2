@@ -14,7 +14,8 @@ export type ResultsSchema = {
   dateUtc: string,
   type: string,
   winner: ResultTeamSchema,
-  loser: ResultTeamSchema
+  loser: ResultTeamSchema,
+  createdAt: string
 }
 
 export function extractResultsData(resultsRaw: Game[], teamsData: TeamSchema[]): ResultsSchema[] {
@@ -70,7 +71,8 @@ function getResultsData(game: Game, ownTeams: Map<number, TeamSchema>): ResultsS
     ...teamInfo,
     dateUtc: game.playDateUtc,
     winner,
-    loser
+    loser,
+    createdAt: new Date().toISOString(),
   }
 
   return resultInfo;
