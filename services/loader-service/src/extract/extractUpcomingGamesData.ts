@@ -50,7 +50,7 @@ export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: Te
   teamsData.forEach(team => {
     const resultPerTeam: UpcomingGamePerTeamSchema = {
       teamId: team.teamId,
-      upcomingGames: upcomingGamesData.filter(data => data.teamId === team.teamId),,
+      upcomingGames: upcomingGamesData.filter(data => data.teamId === team.teamId),
       createdAt: new Date().toISOString()
     }
 
