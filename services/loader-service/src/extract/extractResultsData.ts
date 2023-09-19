@@ -7,7 +7,7 @@ type ResultTeamSchema = {
   sets: number[]
 }
 
-export type ResultsSchema = {
+type ResultsSchema = {
   id: string,
   teamId: number,
   gameId: number,
@@ -15,10 +15,15 @@ export type ResultsSchema = {
   type: string,
   winner: ResultTeamSchema,
   loser: ResultTeamSchema,
-  createdAt: string
 }
 
-export function extractResultsData(resultsRaw: Game[], teamsData: TeamSchema[]): ResultsSchema[] {
+export type ResultPerTeamSchema = {
+  teamId: number,
+  createdAt: string,
+  results: ResultsSchema[]
+}
+
+export function extractResultsData(resultsRaw: Game[], teamsData: TeamSchema[]): ResultPerTeamSchema[] {
   const teams = new Map<number, TeamSchema>()
   teamsData.forEach(team => {
     teams.set(team.teamId, team);
@@ -32,7 +37,18 @@ export function extractResultsData(resultsRaw: Game[], teamsData: TeamSchema[]):
     resultsData.push(data);
   })
 
-  return resultsData;
+  const resultsPerTeam: ResultPerTeamSchema[] = [];
+  teamsData.forEach(team => {
+    const resultPerTeam: ResultPerTeamSchema = {
+      teamId: team.teamId,
+      results: resultsData.filter(data => data.teamId === team.teamId),
+      createdAt: new Date().toISOString()
+    }
+
+    resultsPerTeam.push(resultPerTeam);
+  });
+
+  return resultsPerTeam;
 }
 
 function getResultsData(game: Game, ownTeams: Map<number, TeamSchema>): ResultsSchema {
@@ -71,8 +87,7 @@ function getResultsData(game: Game, ownTeams: Map<number, TeamSchema>): ResultsS
     ...teamInfo,
     dateUtc: game.playDateUtc,
     winner,
-    loser,
-    createdAt: new Date().toISOString(),
+    loser
   }
 
   return resultInfo;

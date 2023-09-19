@@ -15,7 +15,7 @@ type LocationSchema = {
   plusCode: string
 }
 
-export type UpcomingGamesSchema = {
+type UpcomingGamesSchema = {
   id: string,
   teamId: number,
   gameId: number,
@@ -24,10 +24,15 @@ export type UpcomingGamesSchema = {
   opponent: string,
   type: GameType,
   location: LocationSchema,
-  createdAt: string
 }
 
-export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: TeamSchema[]): UpcomingGamesSchema[] {
+export type UpcomingGamePerTeamSchema = {
+  teamId: number,
+  createdAt: string,
+  upcomingGames: UpcomingGamesSchema[]
+}
+
+export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: TeamSchema[]): UpcomingGamePerTeamSchema[] {
   const teams = new Map <number, TeamSchema>()
   teamsData.forEach(team => {
     teams.set(team.teamId, team);
@@ -41,7 +46,18 @@ export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: Te
     upcomingGamesData.push(data);
   })
 
-  return upcomingGamesData;
+  const upcomingGamesPerTeam: UpcomingGamePerTeamSchema[] = [];
+  teamsData.forEach(team => {
+    const resultPerTeam: UpcomingGamePerTeamSchema = {
+      teamId: team.teamId,
+      upcomingGames: upcomingGamesData.filter(data => data.teamId === team.teamId),,
+      createdAt: new Date().toISOString()
+    }
+
+    upcomingGamesPerTeam.push(resultPerTeam);
+  });
+
+  return upcomingGamesPerTeam;
 }
 
 export function getUpcomingGamesData(game: Game, ownTeams: Map<number, TeamSchema>): UpcomingGamesSchema {
@@ -74,8 +90,7 @@ export function getUpcomingGamesData(game: Game, ownTeams: Map<number, TeamSchem
     ...teamInfo,
     gameId: game.gameId,
     dateUtc: game.playDateUtc,
-    location,
-    createdAt: new Date().toISOString()
+    location
   };
 
   return upcomingGameData;

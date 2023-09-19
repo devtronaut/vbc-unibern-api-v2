@@ -1,6 +1,8 @@
 import { DescribeTableCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { ddbDocClient } from './dbClient';
-import { BatchWriteCommand, BatchWriteCommandInput, DeleteCommand, DeleteCommandInput, GetCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import { BatchWriteCommand, BatchWriteCommandInput, QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import config from '../../common/config/config';
+
 
 export async function batchWrite<T>(data: T[], tableName: string){
   try{
@@ -71,18 +73,28 @@ export async function clearTable(tableName: string){
   }
 }
 
-export async function getTeamById(id: number){
-  try{
-    const params = {
-      TableName: "teams_table",
-      Key: {
-        teamId: id
-      }
-    };
+export async function getGamesById(teamId: number){
+  console.log('Method called');
 
-    const response = await ddbDocClient.send(new GetCommand(params))
-    return response;
+  try{
+    const params: QueryCommandInput = {
+      TableName: config.UPCOMING_GAMES_TABLE,
+      KeyConditionExpression: 'teamId = :teamId',
+      ScanIndexForward: true,
+      ExpressionAttributeValues: {
+        ':teamId': teamId
+      },
+      IndexName: "TeamIdIndex"
+    }
+
+    console.log(params);
+
+    const response = await ddbDocClient.send(new QueryCommand(params))
+    console.log('Response: ', response);
+    console.log(response.Items);
+    return response.Items;
   } catch(err){
+    console.log(err);
     throw err;
   }
 }

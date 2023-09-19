@@ -2,8 +2,8 @@ import config from '../common/config/config';
 import { TeamSchema } from '../extract/extractTeamsData';
 import { batchWrite } from './utils/dbUtils';
 import { RankingSchema } from '../extract/extractRankingsData';
-import { ResultsSchema } from '../extract/extractResultsData';
-import { UpcomingGamesSchema } from '../extract/extractUpcomingGamesData';
+import { ResultPerTeamSchema } from '../extract/extractResultsData';
+import { UpcomingGamePerTeamSchema } from '../extract/extractUpcomingGamesData';
 
 export async function persistTeams(teams: TeamSchema[]): Promise<boolean>{
   try{
@@ -25,9 +25,9 @@ export async function persistRankings(rankings: RankingSchema[]): Promise<boolea
   }
 }
 
-export async function persistResults(results: ResultsSchema[]): Promise<boolean> {
+export async function persistResults(results: ResultPerTeamSchema[]): Promise<boolean> {
   try{
-    await batchWrite<ResultsSchema>(results, config.RESULTS_TABLE);
+    await batchWrite<ResultPerTeamSchema>(results, config.RESULTS_TABLE);
     return true;
   } catch (err) {
     console.error(err);
@@ -35,9 +35,9 @@ export async function persistResults(results: ResultsSchema[]): Promise<boolean>
   }
 }
 
-export async function persistUpcomingGames(upcomingGames: UpcomingGamesSchema[]): Promise<boolean> {
+export async function persistUpcomingGames(upcomingGames: UpcomingGamePerTeamSchema[]): Promise<boolean> {
   try{
-    await batchWrite<UpcomingGamesSchema>(upcomingGames, config.UPCOMING_GAMES_TABLE);
+    await batchWrite<UpcomingGamePerTeamSchema>(upcomingGames, config.UPCOMING_GAMES_TABLE);
     return true;
   } catch(err){
     console.error(err);
