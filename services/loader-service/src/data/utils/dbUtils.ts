@@ -1,3 +1,4 @@
+import { DescribeTableCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { ddbDocClient } from './dbClient';
 import { BatchWriteCommand, BatchWriteCommandInput, DeleteCommand, DeleteCommandInput, GetCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 
@@ -26,6 +27,45 @@ export async function batchWrite<T>(data: T[], tableName: string){
       console.log('Batch saved. Status: ' + response.$metadata.httpStatusCode);
     }
   } catch(err){
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function clearTable(tableName: string){
+  try{
+    const tableNameParams = { TableName: tableName }
+
+    const describeResponse = await ddbDocClient.send(new DescribeTableCommand(tableNameParams));
+    const keyHash = describeResponse.Table?.KeySchema?.find(key => key.KeyType === "HASH")?.AttributeName;
+    const scanResponse = await ddbDocClient.send(new ScanCommand(tableNameParams));
+
+    if(!scanResponse.Items || scanResponse.Items.length === 0){
+      console.log(`No items found to delete from ${tableName}.`);
+      return;
+    }
+
+    console.log(`Will delete ${scanResponse.Items.length} items from ${tableName}`);
+    const batches = sliceArrayIntoGroups(scanResponse.Items, 25);
+
+    for(const batch of batches){
+      console.log(`Deleting batch of ${batch.length} items. ${keyHash}`)
+      const params: BatchWriteCommandInput = {
+        RequestItems: {
+          [tableName]: batch.map(item => ({
+            DeleteRequest: {
+              Key: {
+                [`${keyHash}`]: Number.parseInt(item[`${keyHash}`].N!)
+              }
+            }
+          }))
+        }
+      }
+
+      const deleteResponse = await ddbDocClient.send(new BatchWriteCommand(params));
+      console.log('Batch deleted. Status: ' + deleteResponse.$metadata.httpStatusCode);
+    }
+  } catch (err) {
     console.error(err);
     throw err;
   }

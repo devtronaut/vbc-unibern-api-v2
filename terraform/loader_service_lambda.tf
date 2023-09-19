@@ -78,7 +78,9 @@ resource "aws_iam_role_policy" "loader_dynamodb_policy" {
         "Action" : [
           "dynamodb:BatchWriteItem",
           "dynamodb:GetItem",
-          "dynamodb:DeleteItem"
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:Scan"
         ],
         "Resource" : "${aws_dynamodb_table.teams_table.arn}"
       },
@@ -86,7 +88,9 @@ resource "aws_iam_role_policy" "loader_dynamodb_policy" {
         "Effect" : "Allow",
         "Action" : [
           "dynamodb:BatchWriteItem",
-          "dynamodb:DeleteItem"
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:Scan"
         ],
         "Resource" : "${aws_dynamodb_table.rankings_table.arn}"
       },
@@ -94,7 +98,9 @@ resource "aws_iam_role_policy" "loader_dynamodb_policy" {
         "Effect" : "Allow",
         "Action" : [
           "dynamodb:BatchWriteItem",
-          "dynamodb:DeleteItem"
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:Scan"
         ],
         "Resource" : "${aws_dynamodb_table.results_table.arn}"
       },
@@ -102,7 +108,9 @@ resource "aws_iam_role_policy" "loader_dynamodb_policy" {
         "Effect" : "Allow",
         "Action" : [
           "dynamodb:BatchWriteItem",
-          "dynamodb:DeleteItem"
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:Scan"
         ],
         "Resource" : "${aws_dynamodb_table.upcoming_games_table.arn}"
       }
