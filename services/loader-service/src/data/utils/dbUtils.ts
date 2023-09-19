@@ -1,8 +1,6 @@
-import { DescribeTableCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
+import { DescribeTableCommand } from '@aws-sdk/client-dynamodb';
 import { ddbDocClient } from './dbClient';
-import { BatchWriteCommand, BatchWriteCommandInput, QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import config from '../../common/config/config';
-
+import { BatchWriteCommand, BatchWriteCommandInput, ScanCommand } from '@aws-sdk/lib-dynamodb';
 
 export async function batchWrite<T>(data: T[], tableName: string){
   try{
@@ -51,13 +49,15 @@ export async function clearTable(tableName: string){
     const batches = sliceArrayIntoGroups(scanResponse.Items, 25);
 
     for(const batch of batches){
-      console.log(`Deleting batch of ${batch.length} items. ${keyHash}`)
+      console.log(`Deleting batch of ${batch.length} items.`)
+
       const params: BatchWriteCommandInput = {
         RequestItems: {
           [tableName]: batch.map(item => ({
+
             DeleteRequest: {
               Key: {
-                [`${keyHash}`]: Number.parseInt(item[`${keyHash}`].N!)
+                [`${keyHash}`]: Number.parseInt(item[`${keyHash}`])
               }
             }
           }))
@@ -69,32 +69,6 @@ export async function clearTable(tableName: string){
     }
   } catch (err) {
     console.error(err);
-    throw err;
-  }
-}
-
-export async function getGamesById(teamId: number){
-  console.log('Method called');
-
-  try{
-    const params: QueryCommandInput = {
-      TableName: config.UPCOMING_GAMES_TABLE,
-      KeyConditionExpression: 'teamId = :teamId',
-      ScanIndexForward: true,
-      ExpressionAttributeValues: {
-        ':teamId': teamId
-      },
-      IndexName: "TeamIdIndex"
-    }
-
-    console.log(params);
-
-    const response = await ddbDocClient.send(new QueryCommand(params))
-    console.log('Response: ', response);
-    console.log(response.Items);
-    return response.Items;
-  } catch(err){
-    console.log(err);
     throw err;
   }
 }

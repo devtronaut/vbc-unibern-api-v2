@@ -1,11 +1,8 @@
-import { Handler, APIGatewayEvent } from 'aws-lambda';
+import { Handler } from 'aws-lambda';
 import { main } from './controller/controller';
-import { getGamesById } from './data/utils/dbUtils';
-
-export const handler: Handler = async (event: APIGatewayEvent) => {
+export const handler: Handler = async () => {
   try{
     await main();
-    // await getGamesById(2798)
   
     return {
       statusCode: 200,
