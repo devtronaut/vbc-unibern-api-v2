@@ -1,23 +1,23 @@
-import { Handler, APIGatewayEvent } from 'aws-lambda';
-
-export const handler: Handler = async (event: APIGatewayEvent) => {
-  console.log('Event: ', event);
-  let responseMessage: String = 'Hello, World! From ' + process.env.AWS_REGION;
-
-  if (event.queryStringParameters && event.queryStringParameters['name']) {
-    let qsp: string = event.queryStringParameters['name'];
-    responseMessage = `Hello, ${qsp}!`;
+import { Handler } from 'aws-lambda';
+import { main } from './controller/controller';
+export const handler: Handler = async () => {
+  try{
+    await main();
+  
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: JSON.stringify('Teams, Results, Upcoming Games and rankings loaded successfully!'),
+      }),
+    };
+  } catch(err) {
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: JSON.stringify(`Loader could not perform all actions: \n${err}`),
+      }),
+    };
   }
-
-  let responseHeader = {
-    'Content-Type': 'application/json',
-  }
-
-  return {
-    statusCode: 200,
-    headers: responseHeader,
-    body: JSON.stringify({
-      message: responseMessage,
-    }),
-  };
 }

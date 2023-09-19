@@ -20,7 +20,7 @@ resource "aws_lambda_function" "microservice_lambda" {
   s3_bucket = var.services_bucket
   s3_key    = aws_s3_object.microservice_lambda.key
 
-  runtime = var.node_version
+  runtime = var.nodejs_version
   handler = var.handler_function
 
   source_code_hash = data.archive_file.microservice_lambda.output_base64sha256
@@ -70,8 +70,11 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
     "Statement" : [
       {
         "Effect" : "Allow",
-        "Action" : ["dynamodb:*"],
-        "Resource" : "${aws_dynamodb_table.microservice_table.arn}"
+        "Action" : [
+          "dynamodb:GetItem",
+          "dynamodb:BatchGetItem"
+        ],
+        "Resource" : "${var.microservice_table_arn}"
       }
     ]
   })
