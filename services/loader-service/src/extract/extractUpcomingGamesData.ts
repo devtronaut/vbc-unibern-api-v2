@@ -26,13 +26,13 @@ type UpcomingGamesSchema = {
   location: LocationSchema,
 }
 
-export type UpcomingGamePerTeamSchema = {
+export type UpcomingGamesPerTeamSchema = {
   teamId: number,
   createdAt: string,
   upcomingGames: UpcomingGamesSchema[]
 }
 
-export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: TeamSchema[]): UpcomingGamePerTeamSchema[] {
+export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: TeamSchema[]): UpcomingGamesPerTeamSchema[] {
   const teams = new Map <number, TeamSchema>()
   teamsData.forEach(team => {
     teams.set(team.teamId, team);
@@ -46,9 +46,9 @@ export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: Te
     upcomingGamesData.push(data);
   })
 
-  const upcomingGamesPerTeam: UpcomingGamePerTeamSchema[] = [];
+  const upcomingGamesPerTeam: UpcomingGamesPerTeamSchema[] = [];
   teamsData.forEach(team => {
-    const resultPerTeam: UpcomingGamePerTeamSchema = {
+    const resultPerTeam: UpcomingGamesPerTeamSchema = {
       teamId: team.teamId,
       upcomingGames: upcomingGamesData.filter(data => data.teamId === team.teamId),
       createdAt: new Date().toISOString()
