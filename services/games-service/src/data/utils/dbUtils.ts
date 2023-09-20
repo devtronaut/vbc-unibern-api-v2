@@ -1,27 +1,24 @@
-import { QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import config from '../../common/config/config';
+import { GetCommand, GetCommandInput, QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 import { ddbDocClient } from './dbClient';
 
-export async function getGamesById(teamId: number) {
+export async function getByIdFromTable<T>(id: number, projectionString: string, table: string): Promise<T> {
   console.log('Method called');
 
   try {
-    const params: QueryCommandInput = {
-      TableName: config.UPCOMING_GAMES_TABLE,
-      KeyConditionExpression: 'teamId = :teamId',
-      ScanIndexForward: true,
-      ExpressionAttributeValues: {
-        ':teamId': teamId
+    const params: GetCommandInput = {
+      TableName: table,
+      Key: {
+        'teamId': id
       },
-      IndexName: "TeamIdIndex"
+      ProjectionExpression: projectionString
     }
 
     console.log(params);
 
-    const response = await ddbDocClient.send(new QueryCommand(params))
+    const response = await ddbDocClient.send(new GetCommand(params))
     console.log('Response: ', response);
-    console.log(response.Items);
-    return response.Items;
+    console.log(response.Item);
+    return response.Item as T;
   } catch (err) {
     console.log(err);
     throw err;
