@@ -1,4 +1,4 @@
-import { GetCommand, GetCommandInput, QueryCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import { GetCommand, GetCommandInput } from '@aws-sdk/lib-dynamodb';
 import { ddbDocClient } from './dbClient';
 
 export async function getByIdFromTable<T>(id: number, projectionString: string, table: string): Promise<T> {
