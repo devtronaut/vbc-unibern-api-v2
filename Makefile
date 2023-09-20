@@ -32,6 +32,12 @@ tf-deploy-service: check-service-name # Deploy service specified by a SERVICE en
 build-service: check-service-name # Build service specified by a SERVICE env variable
 	@cd ./services/${SERVICE} && npm run build
 
+build-all-services: # Build all services
+	@cd ./services/games-service && npm i && npm run build
+	@cd ./services/loader-service && npm i && npm run build
+	@cd ./services/rankings-service && npm i && npm run build
+	@cd ./services/results-service && npm i && npm run build
+
 check-service-name:
 ifndef SERVICE
 	$(error SERVICE is not set)

@@ -77,7 +77,6 @@ resource "aws_iam_role_policy" "loader_dynamodb_policy" {
         "Effect" : "Allow",
         "Action" : [
           "dynamodb:BatchWriteItem",
-          "dynamodb:GetItem",
           "dynamodb:DeleteItem",
           "dynamodb:DescribeTable",
           "dynamodb:Scan"
