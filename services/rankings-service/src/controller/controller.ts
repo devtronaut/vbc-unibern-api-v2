@@ -1,5 +1,7 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { RankingSchema } from '../common/types/rankingByTeam.type';
+import { getRankingOfTeam } from '../data/getRankings';
 
-export async function main(event: APIGatewayProxyEvent){
-  console.log(event);
+export async function main(teamId: number): Promise<RankingSchema> {
+  const ranking = await getRankingOfTeam(teamId);
+  return ranking;
 }
