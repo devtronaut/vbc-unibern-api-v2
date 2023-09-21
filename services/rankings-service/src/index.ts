@@ -2,11 +2,12 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda
 import { main } from './controller/controller';
 export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-
     if (!event || !event.queryStringParameters || !event.queryStringParameters.teamid) {
       return {
         statusCode: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           message: getErrorMessage(ErrorType.NO_PARAM),
         }),
@@ -18,15 +19,19 @@ export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<API
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
-        message: JSON.stringify(response),
+        message: response,
       }),
     };
   } catch (err) {
     return {
       statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         message: JSON.stringify(`Games Service call failed: \n${err}`),
       }),

@@ -20,7 +20,7 @@ export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<API
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: JSON.stringify(response),
+        message: response,
       }),
     };
   } catch (err) {
