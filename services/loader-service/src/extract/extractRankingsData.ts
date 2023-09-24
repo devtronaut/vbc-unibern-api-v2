@@ -54,8 +54,8 @@ function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema{
   const teams: TeamRankingSchema[] = [];
 
   ranking.ranking.forEach(rank => {
-    const setQuota = rank.setsLost === 0 ? -1 : rank.setsWon / rank.setsWon;
-    const ballQuota = rank.ballsLost === 0 ? -1 : rank.ballsWon / rank.ballsLost;
+    const setQuota = rank.setsLost === 0 ? rank.setsWon : rank.setsWon / rank.setsLost;
+    const ballQuota = rank.ballsLost === 0 ? rank.ballsWon : rank.ballsWon / rank.ballsLost;
 
     const rankDetails: RankDetailsSchema = {
       games: rank.games,
