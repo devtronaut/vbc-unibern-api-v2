@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import { main } from './controller/controller';
 export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  console.log(event.requestContext);
+
   try {
     if (!event || !event.queryStringParameters || !event.queryStringParameters.teamid) {
       return {
@@ -22,9 +24,7 @@ export const handler: Handler = async (event: APIGatewayProxyEvent): Promise<API
       headers: { 
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        message: response,
-      }),
+      body: JSON.stringify(response),
     };
   } catch (err) {
     return {
