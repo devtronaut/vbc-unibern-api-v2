@@ -12,9 +12,10 @@ type ResultsSchema = {
   teamId: number,
   gameId: number,
   dateUtc: string,
-  type: string,
   winner: ResultTeamSchema,
   loser: ResultTeamSchema,
+  league: string,
+  mode: string
 }
 
 export type ResultPerTeamSchema = {
@@ -55,16 +56,19 @@ function getResultsData(game: Game, ownTeams: Map<number, TeamSchema>): ResultsS
   const homeTeamId = game.teams.home.teamId;
   const awayTeamId = game.teams.away.teamId;
 
-  const gameLeague = game.league.translations.d.includes('|') ? game.league.translations.d.split('|')[1].trim() : game.league.translations.d;
+  const rawCaption = game.league.translations.d;
+  const gameLeague = rawCaption.includes('|') ? rawCaption.split('|')[1].trim().split(' ')[0] : rawCaption;
 
   const teamInfo = ownTeams.has(homeTeamId) ? {
     id: ownTeams.get(homeTeamId)!.id,
     teamId: homeTeamId,
-    type: ownTeams.get(homeTeamId)!.league.leagueId === game.league.leagueId ? 'Meisterschaft' : gameLeague
+    league: ownTeams.get(homeTeamId)!.league.caption,
+    mode: ownTeams.get(homeTeamId)!.league.leagueId === game.league.leagueId ? 'Meisterschaft' : gameLeague
   } : {
       id: ownTeams.get(awayTeamId)!.id,
       teamId: awayTeamId,
-      type: ownTeams.get(awayTeamId)?.league.leagueId === game.league.leagueId ? 'Meisterschaft' : gameLeague
+      league: ownTeams.get(awayTeamId)!.league.caption,
+      mode: ownTeams.get(awayTeamId)?.league.leagueId === game.league.leagueId ? 'Meisterschaft' : gameLeague
   }
 
   const homeTeamSummary: ResultTeamSchema = {
@@ -82,7 +86,7 @@ function getResultsData(game: Game, ownTeams: Map<number, TeamSchema>): ResultsS
   const winner = game.resultSummary.winner === 'team_home' ? homeTeamSummary : awayTeamSummary;
   const loser = game.resultSummary.winner !== 'team_home' ? homeTeamSummary : awayTeamSummary;
 
-  const resultInfo = {
+  const resultInfo: ResultsSchema = {
     gameId: game.gameId,
     ...teamInfo,
     dateUtc: game.playDateUtc,

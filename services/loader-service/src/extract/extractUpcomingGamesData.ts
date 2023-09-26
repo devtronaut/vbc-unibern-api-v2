@@ -88,14 +88,17 @@ export function getUpcomingGamesData(game: Game, ownTeams: Map<number, TeamSchem
     plusCode: game.hall.plusCode
   }
 
-  const rawCaption = game.league.translations.shortD;
+  const rawCaption = game.league.translations.d;
+  const gameLeague = rawCaption.includes('|') ? rawCaption.split('|')[1].trim().split(' ')[0] : rawCaption;
+
+  const mode = ownTeams.get(teamInfo.teamId)?.league.leagueId === game.league.leagueId ? 'Meisterschaft' : gameLeague
 
   const upcomingGameData: UpcomingGamesSchema = {
     ...teamInfo,
     gameId: game.gameId,
     dateUtc: game.playDateUtc,
     location,
-    mode: rawCaption.includes('|') ? rawCaption.split('|')[1].trim().split(' ')[0] : rawCaption
+    mode
   };
 
   return upcomingGameData;
