@@ -1,8 +1,8 @@
 version: '3.7'
 
 services:
-  devcontainer:
-    container_name: devcontainer
+  vbc-unibern-api-devcontainer:
+    container_name: vbc-unibern-api-devcontainer
     build:
       context: .
       dockerfile: Dockerfile

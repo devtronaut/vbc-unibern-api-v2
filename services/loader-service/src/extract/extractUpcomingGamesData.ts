@@ -24,6 +24,7 @@ type UpcomingGamesSchema = {
   opponent: string,
   type: GameType,
   location: LocationSchema,
+  mode: string
 }
 
 export type UpcomingGamesPerTeamSchema = {
@@ -43,14 +44,16 @@ export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: Te
   upcomingGamesRaw.forEach(game => {
     const data = getUpcomingGamesData(game, teams);
 
-    upcomingGamesData.push(data);
+    if(upcomingGamesData.findIndex(upcGame => upcGame.gameId === data.gameId) === -1){
+      upcomingGamesData.push(data);
+    }
   })
 
   const upcomingGamesPerTeam: UpcomingGamesPerTeamSchema[] = [];
   teamsData.forEach(team => {
     const resultPerTeam: UpcomingGamesPerTeamSchema = {
       teamId: team.teamId,
-      upcomingGames: upcomingGamesData.filter(data => data.teamId === team.teamId),
+      upcomingGames: upcomingGamesData.filter(data => data.teamId === team.teamId).sort((ga, gb) => {return Date.parse(ga.dateUtc) - Date.parse(gb.dateUtc)}),
       createdAt: new Date().toISOString()
     }
 
@@ -61,7 +64,6 @@ export function extractUpcomingGamesData(upcomingGamesRaw: Game[], teamsData: Te
 }
 
 export function getUpcomingGamesData(game: Game, ownTeams: Map<number, TeamSchema>): UpcomingGamesSchema {
-
   // Information specific to wether this is a homegame or not (from perspective of VBCUB)
   const teamInfo = ownTeams.has(game.teams.home.teamId) ? {
     id: ownTeams.get(game.teams.home.teamId)!.id,
@@ -86,11 +88,17 @@ export function getUpcomingGamesData(game: Game, ownTeams: Map<number, TeamSchem
     plusCode: game.hall.plusCode
   }
 
+  const rawCaption = game.league.translations.d;
+  const gameLeague = rawCaption.includes('|') ? rawCaption.split('|')[1].trim().split(' ')[0] : rawCaption;
+
+  const mode = ownTeams.get(teamInfo.teamId)?.league.leagueId === game.league.leagueId ? 'Meisterschaft' : gameLeague
+
   const upcomingGameData: UpcomingGamesSchema = {
     ...teamInfo,
     gameId: game.gameId,
     dateUtc: game.playDateUtc,
-    location
+    location,
+    mode
   };
 
   return upcomingGameData;

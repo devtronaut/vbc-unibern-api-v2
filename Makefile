@@ -13,17 +13,20 @@ tf-init-reconfigure: # Initialize the working directory with the remote backend
 tf-plan: # Create an execution plan with the changes specified in the terraform scripts
 	terraform -chdir=terraform plan \
 		-var-file=./variables/backend.tfvars \
-		-var-file=./variables/services.tfvars
+		-var-file=./variables/services.tfvars	\
+		-var-file=./variables/gateway.tfvars
 
 tf-apply: # Apply the changes specified in the terraform scripts
 	terraform -chdir=terraform apply -auto-approve \
 		-var-file=./variables/backend.tfvars \
-		-var-file=./variables/services.tfvars
+		-var-file=./variables/services.tfvars	\
+		-var-file=./variables/gateway.tfvars
 
 tf-destroy: # Destroy resources created with the terraform scripts
 	terraform -chdir=terraform destroy \
 		-var-file=./variables/backend.tfvars \
-		-var-file=./variables/services.tfvars		
+		-var-file=./variables/services.tfvars \
+		-var-file=./variables/gateway.tfvars
 
 tf-deploy-service: check-service-name # Deploy service specified by a SERVICE env variable
 	@cd ./services/${SERVICE} && npm run build
