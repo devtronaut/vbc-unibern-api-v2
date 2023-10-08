@@ -42,7 +42,7 @@ export function extractResultsData(resultsRaw: Game[], teamsData: TeamSchema[]):
   teamsData.forEach(team => {
     const resultPerTeam: ResultPerTeamSchema = {
       teamId: team.teamId,
-      results: resultsData.filter(data => data.teamId === team.teamId),
+      results: resultsData.filter(data => data.teamId === team.teamId).sort((ra, rb) => { return Date.parse(rb.dateUtc) - Date.parse(ra.dateUtc) }),
       createdAt: new Date().toISOString()
     }
 
