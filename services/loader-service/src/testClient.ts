@@ -26,37 +26,39 @@ async function test(): Promise<void> {
                 'Error when fetching games for teams data (w/o cup).'
             )
         const teamsData = extractTeamsData(gamesNoCup)
-
+        console.log(teamsData.length);
+        teamsData.forEach(t => console.log(JSON.stringify(t, null, 2)));
         // console.log(JSON.stringify(teamsData[0], null, 2));
 
         // Don't use the fetchGamesSeparated function here, since it doesn't support the mock data json.
-        const games =
-            config.STAGE === Stage.DEV
-                ? (readJSON('./mockData/games-mock.json') as Game[])
-                : await fetchGames(true)
-        if (!games)
-            return console.error(
-                'Error when fetching games for upcoming games and results (w/ cup).'
-            )
+        // const games =
+        //     config.STAGE === Stage.DEV
+        //         ? (readJSON('./mockData/games-mock.json') as Game[])
+        //         : await fetchGames(true)
+        // if (!games)
+        //     return console.error(
+        //         'Error when fetching games for upcoming games and results (w/ cup).'
+        //     )
 
-        const upcomingGamesRaw: Game[] = []
-        const resultsRaw: Game[] = []
+        // const upcomingGamesRaw: Game[] = []
+        // const resultsRaw: Game[] = []
 
-        games.forEach(game => {
-            if (game.setResults.length === 0) {
-                upcomingGamesRaw.push(game)
-            } else {
-                resultsRaw.push(game)
-            }
-        })
+        // games.forEach(game => {
+        //     if (game.setResults.length === 0) {
+        //         upcomingGamesRaw.push(game)
+        //     } else {
+        //         resultsRaw.push(game)
+        //     }
+        // })
 
-        const upcomingGamesData = extractUpcomingGamesData(
-            upcomingGamesRaw,
-            teamsData
-        )
-        const resultsData = extractResultsData(resultsRaw, teamsData)
-
+        // const upcomingGamesData = extractUpcomingGamesData(
+        //     upcomingGamesRaw,
+        //     teamsData
+        // )
+        // const resultsData = extractResultsData(resultsRaw, teamsData)
+        // resultsData.forEach(r => console.log(JSON.stringify(r, null, 2)));
         // console.log(JSON.stringify(resultsData[0], null, 2));
+
         // console.log(JSON.stringify(upcomingGamesData[0], null, 2));
         // upcomingGamesData[3].upcomingGames.forEach(game => console.log(game.league))
 
@@ -64,6 +66,7 @@ async function test(): Promise<void> {
         // if (!rankings) return console.error('Error when fetching rankings.');
         // const teamRankingsData = extractRankingsData(rankings, teamsData);
 
+        // teamRankingsData.forEach(r => console.log(JSON.stringify(r, null, 2)));
         // console.log(JSON.stringify(teamRankingsData[0], null, 2));
     } catch (e) {
         console.error(e)

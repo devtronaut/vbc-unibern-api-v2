@@ -18,6 +18,13 @@ type ResultsSchema = {
     mode: string
 }
 
+type TeamInfo = {
+    id: string,
+    teamId: number,
+    league: string,
+    mode: string
+}
+
 export type ResultPerTeamSchema = {
     teamId: number
     createdAt: string
@@ -63,44 +70,22 @@ function getResultsData(
     game: Game,
     ownTeams: Map<number, TeamSchema>
 ): ResultsSchema {
-    const homeTeamId = game.teams.home.teamId
-    const awayTeamId = game.teams.away.teamId
+    const homeTeam = game.teams.home
+    const awayTeam = game.teams.away
 
-    const rawCaption = game.league.translations.d
-    const gameLeague = rawCaption.includes('|')
-        ? rawCaption.split('|')[1].trim().split(' ')[0]
-        : rawCaption
-
-    const teamInfo = ownTeams.has(homeTeamId)
-        ? {
-              id: ownTeams.get(homeTeamId)!.id,
-              teamId: homeTeamId,
-              league: ownTeams.get(homeTeamId)!.league.caption,
-              mode:
-                  ownTeams.get(homeTeamId)!.league.leagueId ===
-                  game.league.leagueId
-                      ? 'Meisterschaft'
-                      : gameLeague,
-          }
-        : {
-              id: ownTeams.get(awayTeamId)!.id,
-              teamId: awayTeamId,
-              league: ownTeams.get(awayTeamId)!.league.caption,
-              mode:
-                  ownTeams.get(awayTeamId)?.league.leagueId ===
-                  game.league.leagueId
-                      ? 'Meisterschaft'
-                      : gameLeague,
-          }
+    // FIXME With two 2L teams, the results of the second team get ignored, because here we always just match the first team !!!
+    // FIXME Maybe match against both ids and check if both match, to find such cases. Then define handling.
+    const ownTeamId = ownTeams.has(homeTeam.teamId) ? homeTeam.teamId : awayTeam.teamId;
+    const ownTeamInfo = getTeamInfo(game, ownTeams.get(ownTeamId)!);
 
     const homeTeamSummary: ResultTeamSchema = {
-        caption: game.teams.home.caption,
+        caption: homeTeam.caption,
         setsWon: game.resultSummary.wonSetsHomeTeam,
         sets: game.setResults.map(result => result.home),
     }
 
     const awayTeamSummary: ResultTeamSchema = {
-        caption: game.teams.away.caption,
+        caption: awayTeam.caption,
         setsWon: game.resultSummary.wonSetsAwayTeam,
         sets: game.setResults.map(result => result.away),
     }
@@ -109,6 +94,7 @@ function getResultsData(
         game.resultSummary.winner === 'team_home'
             ? homeTeamSummary
             : awayTeamSummary
+
     const loser =
         game.resultSummary.winner !== 'team_home'
             ? homeTeamSummary
@@ -116,11 +102,29 @@ function getResultsData(
 
     const resultInfo: ResultsSchema = {
         gameId: game.gameId,
-        ...teamInfo,
+        ...ownTeamInfo,
         dateUtc: game.playDateUtc,
         winner,
         loser,
     }
 
     return resultInfo
+}
+
+function getTeamInfo(game: Game, ownTeam: TeamSchema): TeamInfo {
+    const rawCaption = game.league.translations.d
+    const gameLeague = rawCaption.includes('|')
+        ? rawCaption.split('|')[1].trim().split(' ')[0]
+        : rawCaption
+
+    return {
+        id: ownTeam.id,
+        teamId: ownTeam.teamId,
+        league: ownTeam.league.caption,
+        mode:
+            ownTeam.league.leagueId ===
+                game.league.leagueId
+                ? 'Meisterschaft'
+                : gameLeague,
+    }
 }

@@ -41,6 +41,7 @@ export function extractRankingsData(
     const groups = teamsData
         .map(team => team.group.groupId)
         .filter((groupId, i, a) => a.indexOf(groupId) == i)
+
     const relevantRankings = rankings.filter(ranking =>
         groups.includes(ranking.groupId)
     )
@@ -60,40 +61,33 @@ export function extractRankingsData(
 }
 
 function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
-    const teams: TeamRankingSchema[] = []
-
-    ranking.ranking.forEach(rank => {
-        const setQuota =
-            rank.setsLost === 0 ? rank.setsWon : rank.setsWon / rank.setsLost
-        const ballQuota =
-            rank.ballsLost === 0
-                ? rank.ballsWon
-                : rank.ballsWon / rank.ballsLost
+    const teams: TeamRankingSchema[] = ranking.ranking.map(r => {
+        const { rank, teamCaption, wins, defeats, points, games, winsClear, winsNarrow, defeatsClear, defeatsNarrow, setsWon, setsLost, ballsWon, ballsLost } = r;
 
         const rankDetails: RankDetailsSchema = {
-            games: rank.games,
-            winsClear: rank.winsClear,
-            winsNarrow: rank.winsNarrow,
-            defeatsClear: rank.defeatsClear,
-            defeatsNarrow: rank.defeatsNarrow,
-            setsWon: rank.setsWon,
-            setsLost: rank.setsLost,
-            setQuota,
-            ballsWon: rank.ballsWon,
-            ballsLost: rank.ballsWon,
-            ballQuota,
+            games,
+            winsClear,
+            winsNarrow,
+            defeatsClear,
+            defeatsNarrow,
+            setsWon,
+            setsLost,
+            setQuota: resolveQuota(setsWon, setsLost),
+            ballsWon,
+            ballsLost,
+            ballQuota: resolveQuota(ballsWon, ballsLost),
         }
 
-        const teamRank: TeamRankingSchema = {
-            rank: rank.rank,
-            teamCaption: rank.teamCaption,
-            wins: rank.wins,
-            defeats: rank.defeats,
-            points: rank.points,
+        const teamRanking: TeamRankingSchema = {
+            rank,
+            teamCaption,
+            wins,
+            defeats,
+            points,
             rankDetails,
         }
 
-        teams.push(teamRank)
+        return teamRanking
     })
 
     const rankingData: RankingSchema = {
@@ -105,4 +99,18 @@ function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
     }
 
     return rankingData
+}
+
+/**
+ * Resolves the quota, so that the dividend is returned, if the divisor is 0.
+ * Therefore eliminates zero division errors.
+ * 
+ * @param dividend the dividend
+ * @param divisor the divisor
+ * @returns the dividend if the divisor is 0, the quotient (quota) otherwise
+ */
+function resolveQuota(dividend: number, divisor: number) {
+    return divisor === 0
+        ? dividend
+        : dividend / divisor
 }

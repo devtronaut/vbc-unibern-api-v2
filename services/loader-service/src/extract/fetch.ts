@@ -77,7 +77,7 @@ export async function fetchFromSwissvolleyAPI<T>(
     url: string,
     apiKey: string
 ): Promise<T> {
-    console.log('Fetch for url: ' + url)
+    console.log('Fetch from url: ' + url)
 
     const authHeader = {
         Authorization: apiKey,
