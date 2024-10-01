@@ -19,9 +19,9 @@ type ResultsSchema = {
 }
 
 type TeamInfo = {
-    id: string,
-    teamId: number,
-    league: string,
+    id: string
+    teamId: number
+    league: string
     mode: string
 }
 
@@ -75,8 +75,10 @@ function getResultsData(
 
     // FIXME With two 2L teams, the results of the second team get ignored, because here we always just match the first team !!!
     // FIXME Maybe match against both ids and check if both match, to find such cases. Then define handling.
-    const ownTeamId = ownTeams.has(homeTeam.teamId) ? homeTeam.teamId : awayTeam.teamId;
-    const ownTeamInfo = getTeamInfo(game, ownTeams.get(ownTeamId)!);
+    const ownTeamId = ownTeams.has(homeTeam.teamId)
+        ? homeTeam.teamId
+        : awayTeam.teamId
+    const ownTeamInfo = getTeamInfo(game, ownTeams.get(ownTeamId)!)
 
     const homeTeamSummary: ResultTeamSchema = {
         caption: homeTeam.caption,
@@ -122,8 +124,7 @@ function getTeamInfo(game: Game, ownTeam: TeamSchema): TeamInfo {
         teamId: ownTeam.teamId,
         league: ownTeam.league.caption,
         mode:
-            ownTeam.league.leagueId ===
-                game.league.leagueId
+            ownTeam.league.leagueId === game.league.leagueId
                 ? 'Meisterschaft'
                 : gameLeague,
     }

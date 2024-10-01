@@ -5,7 +5,7 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default [
     { files: ['**/*.ts'] },
-    { ignores: ['**/dist', '**/node_modules', '**/testClient.ts']},
+    { ignores: ['**/dist', '**/node_modules', '**/testClient.ts'] },
     { languageOptions: { globals: globals.browser } },
     pluginJs.configs.recommended,
     ...tseslint.configs.recommended,

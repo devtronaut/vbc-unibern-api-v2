@@ -31,7 +31,10 @@ export async function persistResults(
     results: ResultPerTeamSchema[]
 ): Promise<boolean> {
     try {
-        await batchWrite<ResultPerTeamSchema>(results, config.RESULTS_TABLE_NAME)
+        await batchWrite<ResultPerTeamSchema>(
+            results,
+            config.RESULTS_TABLE_NAME
+        )
         return true
     } catch (err) {
         console.error(err)

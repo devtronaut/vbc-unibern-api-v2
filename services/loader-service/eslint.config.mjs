@@ -1,6 +1,3 @@
-import globalConfig from '../../eslint.config.mjs';
+import globalConfig from '../../eslint.config.mjs'
 
-export default [
-    ...globalConfig
-]
-
+export default [...globalConfig]

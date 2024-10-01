@@ -8,7 +8,7 @@ import {
 
 export async function batchWrite<T>(data: T[], tableName: string) {
     try {
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any 
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         const putRequests: any[] = [] // TODO define more accurate typing for put request
 
         console.log(`About to persist ${data.length} items.`)

@@ -62,7 +62,22 @@ export function extractRankingsData(
 
 function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
     const teams: TeamRankingSchema[] = ranking.ranking.map(r => {
-        const { rank, teamCaption, wins, defeats, points, games, winsClear, winsNarrow, defeatsClear, defeatsNarrow, setsWon, setsLost, ballsWon, ballsLost } = r;
+        const {
+            rank,
+            teamCaption,
+            wins,
+            defeats,
+            points,
+            games,
+            winsClear,
+            winsNarrow,
+            defeatsClear,
+            defeatsNarrow,
+            setsWon,
+            setsLost,
+            ballsWon,
+            ballsLost,
+        } = r
 
         const rankDetails: RankDetailsSchema = {
             games,
@@ -104,13 +119,11 @@ function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
 /**
  * Resolves the quota, so that the dividend is returned, if the divisor is 0.
  * Therefore eliminates zero division errors.
- * 
+ *
  * @param dividend the dividend
  * @param divisor the divisor
  * @returns the dividend if the divisor is 0, the quotient (quota) otherwise
  */
 function resolveQuota(dividend: number, divisor: number) {
-    return divisor === 0
-        ? dividend
-        : dividend / divisor
+    return divisor === 0 ? dividend : dividend / divisor
 }

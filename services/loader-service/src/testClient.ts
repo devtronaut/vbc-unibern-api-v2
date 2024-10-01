@@ -26,8 +26,8 @@ async function test(): Promise<void> {
                 'Error when fetching games for teams data (w/o cup).'
             )
         const teamsData = extractTeamsData(gamesNoCup)
-        console.log(teamsData.length);
-        teamsData.forEach(t => console.log(JSON.stringify(t, null, 2)));
+        console.log(teamsData.length)
+        teamsData.forEach(t => console.log(JSON.stringify(t, null, 2)))
         // console.log(JSON.stringify(teamsData[0], null, 2));
 
         // Don't use the fetchGamesSeparated function here, since it doesn't support the mock data json.
