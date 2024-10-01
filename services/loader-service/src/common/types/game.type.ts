@@ -13,9 +13,9 @@ export interface Game {
     phase: Phase
     group: Group
     hall: Hall
-    referees: any[] | { [key: string]: Referee }
+    referees: unknown[] | { [key: string]: Referee } // TODO create better type for referees
     setResults: SetResult[]
-    goldenSetResult: any[]
+    goldenSetResult: unknown[] // TODO create better type for goldenSetResult
     resultSummary: ResultSummary
 }
 
