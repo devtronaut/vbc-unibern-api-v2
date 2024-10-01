@@ -48,6 +48,15 @@ else
 	$(info SERVICE is set to ${SERVICE})
 endif
 
+format-check:
+	npx prettier . --check
+
+format-write:
+	npx prettier . --write
+
+lint:
+	npx eslint .
+
 help: # Print help on Makefile
 	@grep '^[^.#]\+:\s\+.*#' Makefile | \
 	sed "s/\(.\+\):\s*\(.*\) #\s*\(.*\)/`printf "\033[93m"`\1`printf "\033[0m"`     \3 [\2]/" | \

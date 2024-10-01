@@ -1,19 +1,19 @@
 version: '3.7'
 
 services:
-  vbc-unibern-api-devcontainer:
-    container_name: vbc-unibern-api-devcontainer
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        NODE_VARIANT: 1-20-bullseye
-        TERRAFORM_VERSION: 1.5.2
-    volumes:
-      - ..:/workspace:cached
-      - ~/.ssh:/home/node/.ssh:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: sleep infinity
-    user: node
-    env_file:
-      - ./devcontainer.env
+    vbc-unibern-api-devcontainer:
+        container_name: vbc-unibern-api-devcontainer
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                NODE_VARIANT: 1-20-bullseye
+                TERRAFORM_VERSION: 1.5.2
+        volumes:
+            - ..:/workspace:cached
+            - ~/.ssh:/home/node/.ssh:ro
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: sleep infinity
+        user: node
+        env_file:
+            - ./devcontainer.env

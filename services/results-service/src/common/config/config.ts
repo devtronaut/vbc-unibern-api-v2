@@ -1,10 +1,10 @@
-import { Stage } from '../enums/stage.enum';
+import { Stage } from '../enums/stage.enum'
 
 const config = {
-  // Stage can be 'dev' or 'int'
-  STAGE: Stage.INT,
+    // Stage can be 'dev' or 'int'
+    STAGE: Stage.INT,
 
-  RESULTS_TABLE: 'results_table',
+    RESULTS_TABLE: 'results_table',
 }
 
-export default config;
+export default config
