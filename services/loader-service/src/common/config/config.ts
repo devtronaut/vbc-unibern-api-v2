@@ -8,10 +8,10 @@ const config = {
     SWISSVOLLEY_API_RANKINGS_ENDPOINT:
         'https://api.volleyball.ch/indoor/ranking',
 
-    TEAMS_TABLE: 'teams_table',
-    RESULTS_TABLE: 'results_table',
-    RANKINGS_TABLE: 'rankings_table',
-    UPCOMING_GAMES_TABLE: 'upcoming_games_table',
+    TEAMS_TABLE_NAME: 'teams_table',
+    RESULTS_TABLE_NAME: 'results_table',
+    RANKINGS_TABLE_NAME: 'rankings_table',
+    UPCOMING_GAMES_TABLE_NAME: 'upcoming_games_table',
 }
 
 export default config

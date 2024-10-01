@@ -7,7 +7,7 @@ import { UpcomingGamesPerTeamSchema } from '../extract/extractUpcomingGamesData'
 
 export async function persistTeams(teams: TeamSchema[]): Promise<boolean> {
     try {
-        await batchWrite<TeamSchema>(teams, config.TEAMS_TABLE)
+        await batchWrite<TeamSchema>(teams, config.TEAMS_TABLE_NAME)
         return true
     } catch (err) {
         console.error(err)
@@ -19,7 +19,7 @@ export async function persistRankings(
     rankings: RankingSchema[]
 ): Promise<boolean> {
     try {
-        await batchWrite<RankingSchema>(rankings, config.RANKINGS_TABLE)
+        await batchWrite<RankingSchema>(rankings, config.RANKINGS_TABLE_NAME)
         return true
     } catch (err) {
         console.error(err)
@@ -31,7 +31,7 @@ export async function persistResults(
     results: ResultPerTeamSchema[]
 ): Promise<boolean> {
     try {
-        await batchWrite<ResultPerTeamSchema>(results, config.RESULTS_TABLE)
+        await batchWrite<ResultPerTeamSchema>(results, config.RESULTS_TABLE_NAME)
         return true
     } catch (err) {
         console.error(err)
@@ -45,7 +45,7 @@ export async function persistUpcomingGames(
     try {
         await batchWrite<UpcomingGamesPerTeamSchema>(
             upcomingGames,
-            config.UPCOMING_GAMES_TABLE
+            config.UPCOMING_GAMES_TABLE_NAME
         )
         return true
     } catch (err) {
