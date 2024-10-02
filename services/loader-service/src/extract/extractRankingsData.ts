@@ -39,7 +39,10 @@ export function extractRankingsData(
     return teamRankings
 }
 
-function getRankingData(ranking: RankingElement[], team: TeamSchema): RankingSchema {
+function getRankingData(
+    ranking: RankingElement[],
+    team: TeamSchema
+): RankingSchema {
     const teams: TeamRankingSchema[] = ranking.map(r => {
         const {
             rank,

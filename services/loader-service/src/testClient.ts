@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import 'dotenv/config'
 import * as fs from 'fs'
 import * as path from 'path'
