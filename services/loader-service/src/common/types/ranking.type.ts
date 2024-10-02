@@ -5,7 +5,7 @@ export interface Ranking {
     ranking: RankingElement[]
 }
 
-interface RankingElement {
+export interface RankingElement {
     rank: number
     teamId: number
     teamCaption: string

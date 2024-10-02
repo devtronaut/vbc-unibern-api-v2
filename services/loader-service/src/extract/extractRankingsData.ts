@@ -1,36 +1,10 @@
-import { Ranking } from '../common/types/ranking.type'
+import {
+    RankDetailsSchema,
+    RankingSchema,
+    TeamRankingSchema,
+} from '../common/types/extractRankings.type'
+import { Ranking, RankingElement } from '../common/types/ranking.type'
 import { TeamSchema } from './extractTeamsData'
-
-type RankDetailsSchema = {
-    games: number
-    winsClear: number
-    winsNarrow: number
-    defeatsClear: number
-    defeatsNarrow: number
-    setsWon: number
-    setsLost: number
-    setQuota: number
-    ballsWon: number
-    ballsLost: number
-    ballQuota: number
-}
-
-type TeamRankingSchema = {
-    rank: number
-    teamCaption: string
-    wins: number
-    defeats: number
-    points: number
-    rankDetails: RankDetailsSchema
-}
-
-export type RankingSchema = {
-    id: string
-    teamId: number
-    leagueCaption: string
-    teams: TeamRankingSchema[]
-    createdAt: string
-}
 
 export function extractRankingsData(
     rankings: Ranking[],
@@ -47,12 +21,17 @@ export function extractRankingsData(
     )
 
     relevantRankings.forEach(ranking => {
+        const dedupRanking = ranking.ranking.filter(
+            (value, idx, self) =>
+                idx === self.findIndex(v => value.teamId === v.teamId)
+        )
+
         const teams = teamsData.filter(
             team => team.group.groupId === ranking.groupId
         )
 
         teams.forEach(team => {
-            const rankingData = getRankingData(ranking, team)
+            const rankingData = getRankingData(dedupRanking, team)
             teamRankings.push(rankingData)
         })
     })
@@ -60,8 +39,8 @@ export function extractRankingsData(
     return teamRankings
 }
 
-function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
-    const teams: TeamRankingSchema[] = ranking.ranking.map(r => {
+function getRankingData(ranking: RankingElement[], team: TeamSchema): RankingSchema {
+    const teams: TeamRankingSchema[] = ranking.map(r => {
         const {
             rank,
             teamCaption,
@@ -93,7 +72,7 @@ function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
             ballQuota: resolveQuota(ballsWon, ballsLost),
         }
 
-        const teamRanking: TeamRankingSchema = {
+        return {
             rank,
             teamCaption,
             wins,
@@ -101,19 +80,15 @@ function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema {
             points,
             rankDetails,
         }
-
-        return teamRanking
     })
 
-    const rankingData: RankingSchema = {
+    return {
         id: team.id,
         teamId: team.teamId,
         leagueCaption: team.league.caption,
         teams: teams.sort((t1, t2) => t1.rank - t2.rank),
         createdAt: new Date().toISOString(),
     }
-
-    return rankingData
 }
 
 /**

@@ -1,9 +1,9 @@
 import config from '../common/config/config'
 import { TeamSchema } from '../extract/extractTeamsData'
 import { batchWrite } from './utils/dbUtils'
-import { RankingSchema } from '../extract/extractRankingsData'
 import { ResultPerTeamSchema } from '../extract/extractResultsData'
 import { UpcomingGamesPerTeamSchema } from '../extract/extractUpcomingGamesData'
+import { RankingSchema } from '../common/types/extractRankings.type'
 
 export async function persistTeams(teams: TeamSchema[]): Promise<boolean> {
     try {
