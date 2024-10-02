@@ -1,25 +1,25 @@
 {
-  "name": "rankings-service",
-  "version": "1.0.0",
-  "description": "Service provides an API to fetch rankings from the dynamodb database.",
-  "main": "index.js",
-  "scripts": {
-    "build": "rimraf ./dist && tsc src/*.ts --outDir ./dist",
-    "start:test": "npm run build && node ./dist/test.js",
-    "start:dev": "npx ts-node ./src/test.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^20.5.9",
-    "esbuild": "^0.19.2",
-    "rimraf": "^5.0.1",
-    "typescript": "^5.2.2"
-  },
-  "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.408.0",
-    "@aws-sdk/lib-dynamodb": "^3.414.0",
-    "@types/aws-lambda": "^8.10.119"
-  }
+    "name": "rankings-service",
+    "version": "1.0.0",
+    "description": "Service provides an API to fetch rankings from the dynamodb database.",
+    "main": "index.js",
+    "scripts": {
+        "build": "rimraf ./dist && tsc src/*.ts --outDir ./dist",
+        "start:test": "npm run build && node ./dist/test.js",
+        "start:dev": "npx ts-node ./src/test.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^20.5.9",
+        "esbuild": "^0.19.2",
+        "rimraf": "^5.0.1",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.408.0",
+        "@aws-sdk/lib-dynamodb": "^3.414.0",
+        "@types/aws-lambda": "^8.10.119"
+    }
 }

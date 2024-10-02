@@ -1,4 +1,4 @@
-type RankDetailsSchema = {
+export type RankDetailsSchema = {
     games: number
     winsClear: number
     winsNarrow: number
@@ -12,7 +12,7 @@ type RankDetailsSchema = {
     ballQuota: number
 }
 
-type TeamRankingSchema = {
+export type TeamRankingSchema = {
     rank: number
     teamCaption: string
     wins: number

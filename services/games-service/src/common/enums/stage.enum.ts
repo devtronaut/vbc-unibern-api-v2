@@ -1,4 +1,4 @@
 export enum Stage {
-  INT = 'int',
-  DEV = 'dev',
+    INT = 'int',
+    DEV = 'dev',
 }

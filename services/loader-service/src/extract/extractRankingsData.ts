@@ -1,95 +1,107 @@
-import { Ranking } from '../common/types/ranking.type';
-import { TeamSchema } from './extractTeamsData';
+import {
+    RankDetailsSchema,
+    RankingSchema,
+    TeamRankingSchema,
+} from '../common/types/extractRankings.type'
+import { Ranking, RankingElement } from '../common/types/ranking.type'
+import { TeamSchema } from './extractTeamsData'
 
-type RankDetailsSchema = {
-  games: number,
-  winsClear: number,
-  winsNarrow: number,
-  defeatsClear: number,
-  defeatsNarrow: number,
-  setsWon: number,
-  setsLost: number,
-  setQuota: number,
-  ballsWon: number,
-  ballsLost: number,
-  ballQuota: number
-}
+export function extractRankingsData(
+    rankings: Ranking[],
+    teamsData: TeamSchema[]
+): RankingSchema[] {
+    const teamRankings: RankingSchema[] = []
 
-type TeamRankingSchema = {
-  rank: number,
-  teamCaption: string,
-  wins: number,
-  defeats: number,
-  points: number,
-  rankDetails: RankDetailsSchema
-}
+    const groups = teamsData
+        .map(team => team.group.groupId)
+        .filter((groupId, i, a) => a.indexOf(groupId) == i)
 
-export type RankingSchema = {
-  id: string,
-  teamId: number,
-  leagueCaption: string,
-  teams: TeamRankingSchema[],
-  createdAt: string
-}
+    const relevantRankings = rankings.filter(ranking =>
+        groups.includes(ranking.groupId)
+    )
 
-export function extractRankingsData(rankings: Ranking[], teamsData: TeamSchema[]): RankingSchema[]{
-  const teamRankings: RankingSchema[] = [];
-  
-  const groups = teamsData.map(team => team.group.groupId).filter((groupId, i, a) => a.indexOf(groupId) == i);
-  const relevantRankings = rankings.filter(ranking => groups.includes(ranking.groupId));
+    relevantRankings.forEach(ranking => {
+        const dedupRanking = ranking.ranking.filter(
+            (value, idx, self) =>
+                idx === self.findIndex(v => value.teamId === v.teamId)
+        )
 
-  relevantRankings.forEach(ranking => {
-    const teams = teamsData.filter(team => team.group.groupId === ranking.groupId);
+        const teams = teamsData.filter(
+            team => team.group.groupId === ranking.groupId
+        )
 
-    teams.forEach(team => {
-      const rankingData = getRankingData(ranking, team);
-      teamRankings.push(rankingData);
+        teams.forEach(team => {
+            const rankingData = getRankingData(dedupRanking, team)
+            teamRankings.push(rankingData)
+        })
     })
-  })
 
-  return teamRankings;
+    return teamRankings
 }
 
-function getRankingData(ranking: Ranking, team: TeamSchema): RankingSchema{
-  const teams: TeamRankingSchema[] = [];
+function getRankingData(
+    ranking: RankingElement[],
+    team: TeamSchema
+): RankingSchema {
+    const teams: TeamRankingSchema[] = ranking.map(r => {
+        const {
+            rank,
+            teamCaption,
+            wins,
+            defeats,
+            points,
+            games,
+            winsClear,
+            winsNarrow,
+            defeatsClear,
+            defeatsNarrow,
+            setsWon,
+            setsLost,
+            ballsWon,
+            ballsLost,
+        } = r
 
-  ranking.ranking.forEach(rank => {
-    const setQuota = rank.setsLost === 0 ? rank.setsWon : rank.setsWon / rank.setsLost;
-    const ballQuota = rank.ballsLost === 0 ? rank.ballsWon : rank.ballsWon / rank.ballsLost;
+        const rankDetails: RankDetailsSchema = {
+            games,
+            winsClear,
+            winsNarrow,
+            defeatsClear,
+            defeatsNarrow,
+            setsWon,
+            setsLost,
+            setQuota: resolveQuota(setsWon, setsLost),
+            ballsWon,
+            ballsLost,
+            ballQuota: resolveQuota(ballsWon, ballsLost),
+        }
 
-    const rankDetails: RankDetailsSchema = {
-      games: rank.games,
-      winsClear: rank.winsClear,
-      winsNarrow: rank.winsNarrow,
-      defeatsClear: rank.defeatsClear,
-      defeatsNarrow: rank.defeatsNarrow,
-      setsWon: rank.setsWon,
-      setsLost: rank.setsLost,
-      setQuota,
-      ballsWon: rank.ballsWon,
-      ballsLost: rank.ballsWon,
-      ballQuota
+        return {
+            rank,
+            teamCaption,
+            wins,
+            defeats,
+            points,
+            rankDetails,
+        }
+    })
+
+    return {
+        id: team.id,
+        teamId: team.teamId,
+        leagueCaption: team.league.caption,
+        teams: teams.sort((t1, t2) => t1.rank - t2.rank),
+        createdAt: new Date().toISOString(),
     }
+}
 
-    const teamRank: TeamRankingSchema = {
-      rank: rank.rank,
-      teamCaption: rank.teamCaption,
-      wins: rank.wins,
-      defeats: rank.defeats,
-      points: rank.points,
-      rankDetails
-    }
-
-    teams.push(teamRank);
-  })
-  
-  const rankingData: RankingSchema = {
-    id: team.id,
-    teamId: team.teamId,
-    leagueCaption: team.league.caption,
-    teams: teams.sort((t1, t2) => t1.rank - t2.rank),
-    createdAt: new Date().toISOString(),
-  }
-
-  return rankingData;
+/**
+ * Resolves the quota, so that the dividend is returned, if the divisor is 0.
+ * Therefore eliminates zero division errors.
+ *
+ * @param dividend the dividend
+ * @param divisor the divisor
+ * @returns the dividend if the divisor is 0, the quotient (quota) otherwise
+ */
+function resolveQuota(dividend: number, divisor: number) {
+    return divisor === 0 ? dividend : dividend / divisor
 }
