@@ -32,6 +32,7 @@ export async function main() {
     const teamsData = extractTeamsData(gamesNoCup)
     console.log(`Extracted ${teamsData.length} teams from the games response.`)
     if (teamsData.length > 0) await clearTeamsTable()
+    console.log(teamsData)
     const persistTeamsResult = await persistTeams(teamsData)
     if (!persistTeamsResult) throw new Error('Unable to persist teams.')
     console.log(`Successfully persisted ${teamsData.length} teams.`)

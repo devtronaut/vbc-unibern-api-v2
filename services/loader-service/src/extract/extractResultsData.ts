@@ -43,9 +43,20 @@ export function extractResultsData(
     const resultsData: ResultsSchema[] = []
 
     resultsRaw.forEach(game => {
-        const data = getResultsData(game, teams)
+        const homeTeam = game.teams.home
+        const awayTeam = game.teams.away
 
-        resultsData.push(data)
+        const homeTeamIsClubTeam = teams.has(homeTeam.teamId);
+        const awayTeamIsClubTeam = teams.has(awayTeam.teamId);
+
+        if (homeTeamIsClubTeam && awayTeamIsClubTeam) {
+            resultsData.push(getResultsData(game, teams.get(homeTeam.teamId)!));
+            resultsData.push(getResultsData(game, teams.get(awayTeam.teamId)!));
+        } else if (homeTeamIsClubTeam) {
+            resultsData.push(getResultsData(game, teams.get(homeTeam.teamId)!));
+        } else if (awayTeamIsClubTeam) {
+            resultsData.push(getResultsData(game, teams.get(awayTeam.teamId)!));
+        }
     })
 
     const resultsPerTeam: ResultPerTeamSchema[] = []
@@ -68,17 +79,15 @@ export function extractResultsData(
 
 function getResultsData(
     game: Game,
-    ownTeams: Map<number, TeamSchema>
+    clubTeam: TeamSchema
 ): ResultsSchema {
     const homeTeam = game.teams.home
     const awayTeam = game.teams.away
 
     // FIXME With two 2L teams, the results of the second team get ignored, because here we always just match the first team !!!
     // FIXME Maybe match against both ids and check if both match, to find such cases. Then define handling.
-    const ownTeamId = ownTeams.has(homeTeam.teamId)
-        ? homeTeam.teamId
-        : awayTeam.teamId
-    const ownTeamInfo = getTeamInfo(game, ownTeams.get(ownTeamId)!)
+
+    const ownTeamInfo = getTeamInfo(game, clubTeam)
 
     const homeTeamSummary: ResultTeamSchema = {
         caption: homeTeam.caption,

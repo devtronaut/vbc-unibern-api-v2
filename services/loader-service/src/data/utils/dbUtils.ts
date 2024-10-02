@@ -13,7 +13,7 @@ export async function batchWrite<T>(data: T[], tableName: string) {
 
         console.log(`About to persist ${data.length} items.`)
         data.forEach(item => {
-            const putRequest = { PutRequest: { Item: JSON.stringify(item) } }
+            const putRequest = { PutRequest: { Item: item } }
             putRequests.push(putRequest)
         })
 

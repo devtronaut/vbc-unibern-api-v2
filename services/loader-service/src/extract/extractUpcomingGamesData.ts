@@ -45,6 +45,8 @@ export function extractUpcomingGamesData(
     const upcomingGamesData: UpcomingGamesSchema[] = []
 
     upcomingGamesRaw.forEach(game => {
+        if (!teams.has(game.teams.home.teamId) && !teams.has(game.teams.away.teamId)) return;
+        
         const data = getUpcomingGamesData(game, teams)
 
         if (
@@ -78,6 +80,8 @@ export function getUpcomingGamesData(
     game: Game,
     ownTeams: Map<number, TeamSchema>
 ): UpcomingGamesSchema {
+    console.log(ownTeams);
+
     // Information specific to wether this is a homegame or not (from perspective of VBCUB)
     const teamInfo = ownTeams.has(game.teams.home.teamId)
         ? {
