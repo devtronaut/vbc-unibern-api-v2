@@ -6,6 +6,7 @@ import { Ranking } from './common/types/ranking.type';
 import { persistData } from './data/persist';
 import { extractRankingsData } from './extract/extractRankingsData';
 import { ResultPerTeamSchema, extractResultsData } from './extract/extractResultsData';
+import { extractTeamLogos } from './extract/extractTeamLogos';
 import { TeamSchema, extractTeamsData } from './extract/extractTeamsData';
 import { UpcomingGamesPerTeamSchema, extractUpcomingGamesData } from './extract/extractUpcomingGamesData';
 
@@ -34,11 +35,12 @@ export function processData(gamesData: Game[], rankingsData: Ranking[], clubName
     if (!rankingsData || rankingsData.length === 0) throw new Error('No rankings to be processed. Aborting.')
 
     const [upcomingGamesData, resultsData] = separateGamesData(gamesData);
-
+    
+    const teamLogoMap = extractTeamLogos(gamesData);
     const teams = extractTeamsData(gamesData, clubName);
     const upcomingGames = extractUpcomingGamesData(upcomingGamesData, teams);
     const results = extractResultsData(resultsData, teams);
-    const rankings = extractRankingsData(rankingsData, teams);
+    const rankings = extractRankingsData(rankingsData, teams, teamLogoMap);
 
     return [teams, upcomingGames, results, rankings];
 }

@@ -22,6 +22,7 @@ type UpcomingGamesSchema = {
     dateUtc: string
     league: string
     opponent: string
+    opponentLogoUrl: string
     type: GameType
     location: LocationSchema
     mode: string
@@ -46,7 +47,7 @@ export function extractUpcomingGamesData(
 
     upcomingGamesRaw.forEach(game => {
         if (!teams.has(game.teams.home.teamId) && !teams.has(game.teams.away.teamId)) return;
-        
+
         const data = getUpcomingGamesData(game, teams)
 
         if (
@@ -83,19 +84,21 @@ export function getUpcomingGamesData(
     // Information specific to wether this is a homegame or not (from perspective of VBCUB)
     const teamInfo = ownTeams.has(game.teams.home.teamId)
         ? {
-              id: ownTeams.get(game.teams.home.teamId)!.id,
-              teamId: game.teams.home.teamId,
-              type: GameType.HOME,
-              opponent: game.teams.away.caption,
-              league: ownTeams.get(game.teams.home.teamId)!.league.caption,
-          }
+            id: ownTeams.get(game.teams.home.teamId)!.id,
+            teamId: game.teams.home.teamId,
+            type: GameType.HOME,
+            opponent: game.teams.away.caption,
+            opponentLogoUrl: game.teams.away.logo,
+            league: ownTeams.get(game.teams.home.teamId)!.league.caption,
+        }
         : {
-              id: ownTeams.get(game.teams.away.teamId)!.id,
-              teamId: game.teams.away.teamId,
-              type: GameType.AWAY,
-              opponent: game.teams.home.caption,
-              league: ownTeams.get(game.teams.away.teamId)!.league.caption,
-          }
+            id: ownTeams.get(game.teams.away.teamId)!.id,
+            teamId: game.teams.away.teamId,
+            type: GameType.AWAY,
+            opponent: game.teams.home.caption,
+            opponentLogoUrl: game.teams.home.logo,
+            league: ownTeams.get(game.teams.away.teamId)!.league.caption,
+        }
 
     const location: LocationSchema = {
         caption: game.hall.caption,

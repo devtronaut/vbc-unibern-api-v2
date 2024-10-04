@@ -3,6 +3,7 @@ import { TeamSchema } from './extractTeamsData.js'
 
 type ResultTeamSchema = {
     caption: string
+    logoUrl: string
     setsWon: number
     sets: number[]
 }
@@ -84,19 +85,18 @@ function getResultsData(
     const homeTeam = game.teams.home
     const awayTeam = game.teams.away
 
-    // FIXME With two 2L teams, the results of the second team get ignored, because here we always just match the first team !!!
-    // FIXME Maybe match against both ids and check if both match, to find such cases. Then define handling.
-
     const ownTeamInfo = getTeamInfo(game, clubTeam)
 
     const homeTeamSummary: ResultTeamSchema = {
         caption: homeTeam.caption,
+        logoUrl: homeTeam.logo,
         setsWon: game.resultSummary.wonSetsHomeTeam,
         sets: game.setResults.map(result => result.home),
     }
 
     const awayTeamSummary: ResultTeamSchema = {
         caption: awayTeam.caption,
+        logoUrl: awayTeam.logo,
         setsWon: game.resultSummary.wonSetsAwayTeam,
         sets: game.setResults.map(result => result.away),
     }

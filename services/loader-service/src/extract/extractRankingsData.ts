@@ -8,7 +8,8 @@ import { TeamSchema } from './extractTeamsData'
 
 export function extractRankingsData(
     rankings: Ranking[],
-    teamsData: TeamSchema[]
+    teamsData: TeamSchema[],
+    teamLogoMap: Map<number, string>
 ): RankingSchema[] {
     const teamRankings: RankingSchema[] = []
 
@@ -31,7 +32,7 @@ export function extractRankingsData(
         )
 
         teams.forEach(team => {
-            const rankingData = getRankingData(dedupRanking, team)
+            const rankingData = getRankingData(dedupRanking, team, teamLogoMap)
             teamRankings.push(rankingData)
         })
     })
@@ -41,11 +42,13 @@ export function extractRankingsData(
 
 function getRankingData(
     ranking: RankingElement[],
-    team: TeamSchema
+    team: TeamSchema,
+    teamLogoMap: Map<number, string>
 ): RankingSchema {
     const teams: TeamRankingSchema[] = ranking.map(r => {
         const {
             rank,
+            teamId,
             teamCaption,
             wins,
             defeats,
@@ -75,9 +78,13 @@ function getRankingData(
             ballQuota: resolveQuota(ballsWon, ballsLost),
         }
 
+        if (!teamLogoMap.has(teamId)) throw new Error(`The team ${team.teamId} does not have a logo in the logo map.`);        
+        const teamLogoUrl = teamLogoMap.get(teamId)!;
+
         return {
             rank,
             teamCaption,
+            teamLogoUrl,
             wins,
             defeats,
             points,
