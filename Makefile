@@ -4,7 +4,7 @@ all: tf-init-reconfigure tf-plan tf-apply tf-destroy help
 
 .DEFAULT_GOAL := help
 
-aws-configure-context: check-aws-env
+aws-configure-context: check-aws-env # Configure the aws context
 	aws configure --profile ${AWS_DEFAULT_PROFILE}
 
 tf-init-local: # Initialize the working directory with the local backend

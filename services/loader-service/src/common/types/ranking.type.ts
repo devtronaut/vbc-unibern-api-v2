@@ -9,6 +9,7 @@ export interface RankingElement {
     rank: number
     teamId: number
     teamCaption: string
+    teamLogoUrl: string
     games: number
     points: number
     wins: number
