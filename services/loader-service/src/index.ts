@@ -1,5 +1,6 @@
 import { Handler } from 'aws-lambda'
-import { main } from './controller/controller'
+import { main } from './main'
+
 export const handler: Handler = async () => {
     try {
         await main()

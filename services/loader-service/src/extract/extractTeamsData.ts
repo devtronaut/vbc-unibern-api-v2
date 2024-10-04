@@ -27,13 +27,12 @@ export type TeamSchema = {
     createdAt: string
 }
 
-export function extractTeamsData(games: Game[]): TeamSchema[] {
+export function extractTeamsData(games: Game[], clubName: string): TeamSchema[] {
     const dedupTeamData = new Map<number, TeamSchema>()
 
     games.forEach(game => {
-        const unibernRegex = new RegExp(/\buni\sbern\b/i)
-        const homeTeamMatch = isClubTeam(unibernRegex, game.teams.home.caption)
-        const awayTeamMatch = isClubTeam(unibernRegex, game.teams.away.caption)
+        const homeTeamMatch = isClubTeam(clubName, game.teams.home.caption)
+        const awayTeamMatch = isClubTeam(clubName, game.teams.away.caption)
 
         // Ignore cases, where none of the teams is an actual club team (e.g., club associated RTS team plays other non-club team)
         if (!homeTeamMatch && !awayTeamMatch) return
@@ -46,8 +45,8 @@ export function extractTeamsData(games: Game[]): TeamSchema[] {
     return Array.from(dedupTeamData.values())
 }
 
-function isClubTeam(clubRegex: RegExp, teamName: string): boolean {
-    return clubRegex.test(teamName.toLowerCase())
+function isClubTeam(clubName: string, teamName: string): boolean {
+    return teamName.toLowerCase().startsWith(clubName.toLowerCase());
 }
 
 function getTeamData(game: Game, team: Team): TeamSchema {

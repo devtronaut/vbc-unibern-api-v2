@@ -32,8 +32,11 @@ resource "aws_lambda_function" "loader_lambda" {
 
   environment {
     variables = {
-      SWISSVOLLEY_API_KEY_VBCUNIBERN = var.swissvolley_api_key_vbcunibern
-      SWISSVOLLEY_API_KEY_VOLLEYUNIBERN = var.swissvolley_api_key_volleyunibern
+      TENANT1_NAME = var.tenant1_name
+      TENANT1_API_KEY = var.tenant1_api_key
+
+      TENANT2_NAME = var.tenant2_name
+      TENANT2_API_KEY = var.tenant2_api_key
     }
   }
 }

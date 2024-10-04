@@ -1,81 +1,41 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import 'dotenv/config'
-import * as fs from 'fs'
-import * as path from 'path'
 
-import { fetchGames, fetchRankings } from './extract/fetch'
-import { extractTeamsData } from './extract/extractTeamsData'
-import { extractRankingsData } from './extract/extractRankingsData'
-import { extractUpcomingGamesData } from './extract/extractUpcomingGamesData'
-import { extractResultsData } from './extract/extractResultsData'
-import { Game } from './common/types/game.type'
-import { Ranking } from './common/types/ranking.type'
-
-import config from './common/config/config'
-import { Stage } from './common/enums/stage.enum'
+import { RankingSchema } from './common/types/extractRankings.type'
+import { ResultPerTeamSchema } from './extract/extractResultsData';
+import { TeamSchema } from './extract/extractTeamsData';
+import { UpcomingGamesPerTeamSchema } from './extract/extractUpcomingGamesData';
+import config from './common/config/config';
+import { fetchData } from './api/fetch';
+import { processData } from './main';
 
 test().then(() => console.log('\nDone!'))
 
+// This function should always closely mimick the main function but without the persistence steps
 async function test(): Promise<void> {
     try {
-        const gamesNoCup =
-            config.STAGE === Stage.DEV
-                ? (readJSON('./mockData/gamesNoCup-mock.json') as Game[])
-                : await fetchGames(false)
-        if (!gamesNoCup)
-            return console.error(
-                'Error when fetching games for teams data (w/o cup).'
-            )
-        const teamsData = extractTeamsData(gamesNoCup)
-        console.log(teamsData.length)
-        teamsData.forEach(t => console.log(JSON.stringify(t, null, 2)))
-        console.log(JSON.stringify(teamsData[0], null, 2));
+        const allTeams: TeamSchema[] = [];
+        const allUpcomingGames: UpcomingGamesPerTeamSchema[] = [];
+        const allResults: ResultPerTeamSchema[] = [];
+        const allRankings: RankingSchema[] = [];
 
-        // Don't use the fetchGamesSeparated function here, since it doesn't support the mock data json.
-        const games =
-            config.STAGE === Stage.DEV
-                ? (readJSON('./mockData/games-mock.json') as Game[])
-                : await fetchGames(true)
-        if (!games)
-            return console.error(
-                'Error when fetching games for upcoming games and results (w/ cup).'
-            )
+        for await (const tenant of config.TENANTS){
+            const [gamesData, rankingsData] = await fetchData(tenant.apiKey);
 
-        const upcomingGamesRaw: Game[] = []
-        const resultsRaw: Game[] = []
+            const [teams, upcomingGames, results, rankings] = processData(gamesData, rankingsData, tenant.name);
 
-        games.forEach(game => {
-            if (game.setResults.length === 0) {
-                upcomingGamesRaw.push(game)
-            } else {
-                resultsRaw.push(game)
-            }
-        })
+            allTeams.push(...teams);
+            allUpcomingGames.push(...upcomingGames);
+            allResults.push(...results);
+            allRankings.push(...rankings);
+        }
 
-        const upcomingGamesData = extractUpcomingGamesData(
-            upcomingGamesRaw,
-            teamsData
-        )
-        const resultsData = extractResultsData(resultsRaw, teamsData)
-        resultsData.forEach(r => console.log(JSON.stringify(r, null, 2)));
-        console.log(JSON.stringify(resultsData[0], null, 2));
-
-        // console.log(JSON.stringify(upcomingGamesData[0], null, 2));
-        // upcomingGamesData[3].upcomingGames.forEach(game => console.log(game.league))
-
-        // const rankings = config.STAGE === Stage.DEV ? readJSON('./mockData/rankings-mock.json') as Ranking[] : await fetchRankings();
-        // if (!rankings) return console.error('Error when fetching rankings.');
-        // const teamRankingsData = extractRankingsData(rankings, teamsData);
-
-        // teamRankingsData.forEach(r => console.log(JSON.stringify(r, null, 2)));
-        // console.log(JSON.stringify(teamRankingsData[0], null, 2));
+        console.log(allTeams);
+        console.log(allUpcomingGames);
+        console.log(allResults);
+        console.log(allRankings);
     } catch (e) {
         console.error(e)
     }
-}
-
-function readJSON(uri: string) {
-    const jsonString = fs.readFileSync(path.join(__dirname, uri), 'utf-8')
-    return JSON.parse(jsonString)
 }
