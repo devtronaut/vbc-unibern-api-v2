@@ -80,8 +80,6 @@ export function getUpcomingGamesData(
     game: Game,
     ownTeams: Map<number, TeamSchema>
 ): UpcomingGamesSchema {
-    console.log(ownTeams);
-
     // Information specific to wether this is a homegame or not (from perspective of VBCUB)
     const teamInfo = ownTeams.has(game.teams.home.teamId)
         ? {

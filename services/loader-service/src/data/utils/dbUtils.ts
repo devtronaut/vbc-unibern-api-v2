@@ -11,7 +11,6 @@ export async function batchWrite<T>(data: T[], tableName: string) {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         const putRequests: any[] = [] // TODO define more accurate typing for put request
 
-        console.log(`About to persist ${data.length} items.`)
         data.forEach(item => {
             const putRequest = { PutRequest: { Item: item } }
             putRequests.push(putRequest)
@@ -20,7 +19,7 @@ export async function batchWrite<T>(data: T[], tableName: string) {
         const batches = sliceArrayIntoGroups(putRequests, 25)
 
         for (const batch of batches) {
-            console.log(`Persisting batch of ${batch.length} items.`)
+            console.log(`Persisting batch of ${batch.length} items into ${tableName}.`)
             const params: BatchWriteCommandInput = {
                 RequestItems: {
                     [tableName]: batch,
@@ -32,7 +31,7 @@ export async function batchWrite<T>(data: T[], tableName: string) {
                 new BatchWriteCommand(params)
             )
             console.log(
-                'Batch saved. Status: ' + response.$metadata.httpStatusCode
+                `Batch saved into ${tableName}. Status: ${response.$metadata.httpStatusCode}`
             )
         }
     } catch (err) {
@@ -60,13 +59,10 @@ export async function clearTable(tableName: string) {
             return
         }
 
-        console.log(
-            `Will delete ${scanResponse.Items.length} items from ${tableName}`
-        )
         const batches = sliceArrayIntoGroups(scanResponse.Items, 25)
 
         for (const batch of batches) {
-            console.log(`Deleting batch of ${batch.length} items.`)
+            console.log(`Deleting batch of ${batch.length} items from ${tableName}.`)
 
             const params: BatchWriteCommandInput = {
                 RequestItems: {
@@ -86,8 +82,7 @@ export async function clearTable(tableName: string) {
                 new BatchWriteCommand(params)
             )
             console.log(
-                'Batch deleted. Status: ' +
-                    deleteResponse.$metadata.httpStatusCode
+                `Batch deleted from ${tableName}. Status: ${deleteResponse.$metadata.httpStatusCode}`
             )
         }
     } catch (err) {
