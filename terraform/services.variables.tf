@@ -8,12 +8,22 @@ variable "nodejs_version" {
   type        = string
 }
 
-variable "swissvolley_api_key_vbcunibern" {
-  description = "The api key of vbc uni bern for the swissvolley api."
+variable "tenant1_name" {
+  description = "The club name for a tenant"
+}
+
+variable "tenant1_api_key" {
+  description = "The api key of volley uni bern for the tenant."
   type        = string
 }
 
-variable "swissvolley_api_key_volleyunibern" {
-  description = "The api key of volley uni bern for the swissvolley api."
+variable "tenant2_name" {
+  description = "The club name for a tenant"
+  type        = string
+}
+
+
+variable "tenant2_api_key" {
+  description = "The api key of volley uni bern for the tenant."
   type        = string
 }
