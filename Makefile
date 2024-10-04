@@ -4,6 +4,9 @@ all: tf-init-reconfigure tf-plan tf-apply tf-destroy help
 
 .DEFAULT_GOAL := help
 
+aws-configure-context: check-aws-env
+	aws configure --profile ${AWS_DEFAULT_PROFILE}
+
 tf-init-local: # Initialize the working directory with the local backend
 	terraform -chdir=terraform init -reconfigure
 
@@ -46,6 +49,11 @@ ifndef SERVICE
 	$(error SERVICE is not set)
 else
 	$(info SERVICE is set to ${SERVICE})
+endif
+
+check-aws-env:
+ifndef AWS_DEFAULT_PROFILE
+	$(error AWS_DEFAULT_PROFILE is not set)
 endif
 
 format-check:
