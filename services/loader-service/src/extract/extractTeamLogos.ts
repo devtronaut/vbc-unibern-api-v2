@@ -1,8 +1,6 @@
 import { Game } from '../common/types/game.type';
 
 export function extractTeamLogos(games: Game[]): Map<number, string> {
-    if (games?.length === 0) throw new Error('No games were passed to extract logos from. Games array was undefined or empty.')
-
     const teamLogoMap = new Map<number, string>();
 
     games.map(game => (game.teams)).forEach(teams => {
@@ -14,7 +12,6 @@ export function extractTeamLogos(games: Game[]): Map<number, string> {
 
         teamLogoMap.set(homeTeam.teamId, homeTeam.logo);
         teamLogoMap.set(awayTeam.teamId, awayTeam.logo);
-    });
 
     return teamLogoMap;
 }

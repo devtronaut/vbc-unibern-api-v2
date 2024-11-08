@@ -79,6 +79,7 @@ function getRankingData(
         }
 
         if (!teamLogoMap.has(teamId)) throw new Error(`The team ${team.teamId} ${teamCaption} ${team.league.caption} does not have a logo in the logo map.`);        
+
         const teamLogoUrl = teamLogoMap.get(teamId)!;
 
         return {
