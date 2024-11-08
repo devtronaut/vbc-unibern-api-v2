@@ -37,6 +37,12 @@ resource "aws_lambda_function" "loader_lambda" {
 
       TENANT2_NAME = var.tenant2_name
       TENANT2_API_KEY = var.tenant2_api_key
+      
+      TENANT3_NAME = var.tenant3_name
+      TENANT3_API_KEY = var.tenant3_api_key
+
+      TENANT4_NAME = var.tenant4_name
+      TENANT4_API_KEY = var.tenant4_api_key
     }
   }
 }

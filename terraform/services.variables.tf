@@ -13,7 +13,7 @@ variable "tenant1_name" {
 }
 
 variable "tenant1_api_key" {
-  description = "The api key of volley uni bern for the tenant."
+  description = "The api key for the tenant."
   type        = string
 }
 
@@ -24,6 +24,28 @@ variable "tenant2_name" {
 
 
 variable "tenant2_api_key" {
-  description = "The api key of volley uni bern for the tenant."
+  description = "The api key for the tenant."
+  type        = string
+}
+
+variable "tenant3_name" {
+  description = "The club name for a tenant"
+  type        = string
+}
+
+
+variable "tenant3_api_key" {
+  description = "The api key for the tenant."
+  type        = string
+}
+
+variable "tenant4_name" {
+  description = "The club name for a tenant"
+  type        = string
+}
+
+
+variable "tenant4_api_key" {
+  description = "The api key for the tenant."
   type        = string
 }

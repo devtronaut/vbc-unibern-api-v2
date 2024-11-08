@@ -43,14 +43,30 @@ const config = {
             name: process.env.TENANT2_NAME!,
             apiKey: process.env.TENANT2_API_KEY!
         },
+        {
+            name: process.env.TENANT3_NAME!,
+            apiKey: process.env.TENANT3_API_KEY!
+        },
+        {
+            name: process.env.TENANT4_NAME!,
+            apiKey: process.env.TENANT4_API_KEY!
+        },
     ]
 }
 
 function validateConfig(): Config {
+
     if (!process.env.TENANT1_NAME) throw new Error('Tenants must be specified with a name and an api key');
     if (!process.env.TENANT1_API_KEY) throw new Error('Tenants must be specified with a name and an api key');
+
     if (!process.env.TENANT2_NAME) throw new Error('Tenants must be specified with a name and an api key');
     if (!process.env.TENANT2_API_KEY) throw new Error('Tenants must be specified with a name and an api key');
+
+    if (!process.env.TENANT3_NAME) throw new Error('Tenants must be specified with a name and an api key');
+    if (!process.env.TENANT3_API_KEY) throw new Error('Tenants must be specified with a name and an api key');
+
+    if (!process.env.TENANT4_NAME) throw new Error('Tenants must be specified with a name and an api key');
+    if (!process.env.TENANT4_API_KEY) throw new Error('Tenants must be specified with a name and an api key');
     
     return config;
 }
