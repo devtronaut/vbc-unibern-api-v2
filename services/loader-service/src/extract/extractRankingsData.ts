@@ -78,7 +78,8 @@ function getRankingData(
             ballQuota: resolveQuota(ballsWon, ballsLost),
         }
 
-        if (!teamLogoMap.has(teamId)) throw new Error(`The team ${team.teamId} does not have a logo in the logo map.`);        
+        if (!teamLogoMap.has(teamId)) throw new Error(`The team ${team.teamId} ${teamCaption} ${team.league.caption} does not have a logo in the logo map.`);        
+
         const teamLogoUrl = teamLogoMap.get(teamId)!;
 
         return {
