@@ -12,6 +12,7 @@ export function extractTeamLogos(games: Game[]): Map<number, string> {
 
         teamLogoMap.set(homeTeam.teamId, homeTeam.logo);
         teamLogoMap.set(awayTeam.teamId, awayTeam.logo);
+    })
 
     return teamLogoMap;
 }
