@@ -96,6 +96,8 @@ function getRankingData(
     return {
         id: team.id,
         teamId: team.teamId,
+        teamCaption: team.caption,
+        clubCaption: team.club.caption,
         leagueCaption: team.league.caption,
         teams: teams.sort((t1, t2) => t1.rank - t2.rank),
         createdAt: new Date().toISOString(),

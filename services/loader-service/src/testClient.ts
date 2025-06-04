@@ -10,7 +10,7 @@ import config from './common/config/config';
 import { fetchData } from './api/fetch';
 import { processData } from './main';
 
-test().then(() => console.log('\nDone!'))
+test().then(() => console.log('\nDone!')).catch(err => console.log('\nFailed: ' + err))
 
 // This function should always closely mimick the main function but without the persistence steps
 async function test(): Promise<void> {

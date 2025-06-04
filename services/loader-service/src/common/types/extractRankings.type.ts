@@ -25,6 +25,8 @@ export type TeamRankingSchema = {
 export type RankingSchema = {
     id: string
     teamId: number
+    teamCaption: string
+    clubCaption: string
     leagueCaption: string
     teams: TeamRankingSchema[]
     createdAt: string
